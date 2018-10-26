@@ -805,7 +805,8 @@ void SetN2kPGN129038(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, u
     N2kMsg.Add2ByteUDouble(SOG, 0.01);
     N2kMsg.AddByte(0xff); // Communication State (19 bits)
     N2kMsg.AddByte(0xff);
-    N2kMsg.AddByte(0xff); // AIS transceiver information (5 bits)
+//    N2kMsg.AddByte(0xff); // AIS transceiver information (5 bits)
+    N2kMsg.AddByte(0); // AIS transceiver information (5 bits)
     N2kMsg.Add2ByteUDouble(Heading, 1e-04);
     N2kMsg.Add2ByteDouble(ROT, ((1e-3/32.0) * 0.0001));
     N2kMsg.AddByte(0xF0 | (NavStatus & 0x0f));
@@ -857,7 +858,8 @@ void SetN2kPGN129039(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, u
     N2kMsg.Add2ByteUDouble(SOG, 0.01);
     N2kMsg.AddByte(0xff); // Communication State (19 bits)
     N2kMsg.AddByte(0xff);
-    N2kMsg.AddByte(0xff); // AIS transceiver information (5 bits)
+//    N2kMsg.AddByte(0xff); // AIS transceiver information (5 bits)
+    N2kMsg.AddByte(0); // AIS transceiver information (5 bits)
     N2kMsg.Add2ByteUDouble(Heading, 1e-04);
     N2kMsg.AddByte(0xff); // Regional application
     N2kMsg.AddByte((Mode & 0x01)<<7 | (Msg22 & 0x01)<<6 | (Band & 0x01)<<5 |
