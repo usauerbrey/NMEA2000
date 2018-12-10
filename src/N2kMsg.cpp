@@ -651,12 +651,79 @@ void PrintBuf(N2kStream *port, unsigned char len, const unsigned char *pData, bo
   if (AddLF) port->println(F(""));
 }
 
+struct tN2KDebugHandler {
+	const unsigned long PGN;
+	const char* N2KMsg;
+};
+
+tN2KDebugHandler N2KMsgs[] = {
+	{  60928UL, "ISO Address Claim" },
+	{ 126993UL, "Heartbeat" },
+	{ 126992UL, "System Time" },
+	{ 127233UL, "Man Overboard Notification(MOB)" },
+	{ 127237UL, "Heading/Track Control" },
+	{ 127245UL, "Rudder" },
+	{ 127250UL, "Vessel Heading" },
+	{ 127251UL, "Rate of Turn" },
+	{ 127258UL, "Magnetic Variation" },
+	{ 127488UL, "Engine Parameters, Rapid Update" },
+	{ 127489UL, "Engine Parameters, Dynamic" },
+	{ 127493UL, "Transmission Parameters, Dynamic" },
+	{ 127505UL, "Fluid Level" },
+	{ 127508UL, "Battery Status" },
+	{ 128259UL, "Speed, Water referenced" },
+	{ 128267UL, "Water Depth" },
+	{ 128275UL, "Distance Log" },
+	{ 129025UL, "Position, Rapid Update" },
+	{ 129026UL, "COG & SOG, Rapid Update" },
+	{ 129029UL, "GNSS Position Data" },
+	{ 129033UL, "Local Time Offset" },
+	{ 129044UL, "Datum" },
+	{ 129283UL, "Cross Track Error" },
+	{ 129284UL, "Navigation Data" },
+	{ 129285UL, "Navigation - Route/WP information" },
+	{ 129291UL, "Set & Drift, Rapid Update" },
+	{ 129539UL, "GNSS DOPs" },
+	{ 129540UL, "GNSS Sats in View" },
+	{ 130066UL, "Route and WP Service - Route/WP, List Attributes" },
+	{ 130067UL, "Route and WP Service - Route, WP Name&Position" },
+	{ 130074UL, "Route and WP Service - WP List, WP Name&Position" },
+	{ 130306UL, "Wind Data" },
+	{ 130310UL, "Environmental Parameters" },
+	{ 130311UL, "Environmental Parameters" },
+	{ 130312UL, "Temperature" },
+	{ 130313UL, "Humidity" },
+	{ 130314UL, "Actual Pressure" },
+	{ 130316UL, "Temperature, Extended Range" },
+	{ 129038UL, "AIS Class A Position Report" },
+	{ 129039UL, "AIS Class B Position Report" },
+	{ 129040UL, "AIS Class B Extended Position Report" },
+	{ 129041UL, "AIS Aids to Navigation(AtoN) Report" },
+	{ 129793UL, "AIS UTC and Date Report" },
+	{ 129794UL, "AIS Class A Static and Voyage Related Data" },
+	{ 129798UL, "AIS SAR Aircraft Position Report" },
+	{ 129809UL, "AIS Class B ""CS"" Static Data Report, Part A" },
+	{ 129810UL, "AIS Class B ""CS"" Static Data Report, Part B" },
+	{ 0,0 }
+};
+
 //*****************************************************************************
 void tN2kMsg::Print(N2kStream *port, bool NoData) const {
+	int i;
+	
   if (port==0 || !IsValid()) return;
+  	
+  // Find debug msg
+	for (i = 0; (N2KMsgs[i].PGN != 0 && N2KMsgs[i].PGN != PGN); i++);
+
+ 	
   port->print(millis()); port->print(F(" : "));
   port->print(F("Pri:")); port->print(Priority);
   port->print(F(" PGN:")); port->print(PGN);
+	if (N2KMsgs[i].PGN != 0) {
+		port->print(F(" - "));
+		port->print(N2KMsgs[i].N2KMsg);
+	}
   port->print(F(" Source:")); port->print(Source);
   port->print(F(" Dest:")); port->print(Destination);
   port->print(F(" Len:")); port->print(DataLen);
