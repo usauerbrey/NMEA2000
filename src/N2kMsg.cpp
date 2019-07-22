@@ -657,7 +657,17 @@ struct tN2KDebugHandler {
 };
 
 tN2KDebugHandler N2KMsgs[] = {
-	{  60928UL, "ISO Address Claim" },
+	{  60928UL, " ISO Address Claim" },
+	{  61184UL, " Manu. Proprietary single-frame addressed" },
+	{  65311UL, " Manu. Proprietary single-frame non-addressed" },
+	{  65359UL, " Manu. Proprietary single-frame non-addressed" },
+	{  65360UL, " Manu. Proprietary single-frame non-addressed" },
+	{  65362UL, " Manu. Proprietary single-frame non-addressed" },
+	{  65379UL, " Manu. Proprietary single-frame non-addressed" },
+	{  65384UL, " Manu. Proprietary single-frame non-addressed" },
+	{ 126208UL, "NMEA - Request group function" },
+	{ 126464UL, "PGN List - Transmit PGN's group function" },
+	{ 126720UL, "Manu. Proprietary fast-packet addressed" },
 	{ 126993UL, "Heartbeat" },
 	{ 126992UL, "System Time" },
 	{ 127233UL, "Man Overboard Notification(MOB)" },
@@ -665,6 +675,7 @@ tN2KDebugHandler N2KMsgs[] = {
 	{ 127245UL, "Rudder" },
 	{ 127250UL, "Vessel Heading" },
 	{ 127251UL, "Rate of Turn" },
+	{ 127257UL, "Attitude" },
 	{ 127258UL, "Magnetic Variation" },
 	{ 127488UL, "Engine Parameters, Rapid Update" },
 	{ 127489UL, "Engine Parameters, Dynamic" },
@@ -679,12 +690,22 @@ tN2KDebugHandler N2KMsgs[] = {
 	{ 129029UL, "GNSS Position Data" },
 	{ 129033UL, "Local Time Offset" },
 	{ 129044UL, "Datum" },
+	{ 129038UL, "AIS Class A Position Report" },
+	{ 129039UL, "AIS Class B Position Report" },
+	{ 129040UL, "AIS Class B Extended Position Report" },
+	{ 129041UL, "AIS Aids to Navigation(AtoN) Report" },
 	{ 129283UL, "Cross Track Error" },
 	{ 129284UL, "Navigation Data" },
 	{ 129285UL, "Navigation - Route/WP information" },
 	{ 129291UL, "Set & Drift, Rapid Update" },
 	{ 129539UL, "GNSS DOPs" },
 	{ 129540UL, "GNSS Sats in View" },
+	{ 129542UL, "GNSS Pseudorange Noise Statistics" },
+	{ 129793UL, "AIS UTC and Date Report" },
+	{ 129794UL, "AIS Class A Static and Voyage Related Data" },
+	{ 129798UL, "AIS SAR Aircraft Position Report" },
+	{ 129809UL, "AIS Class B ""CS"" Static Data Report, Part A" },
+	{ 129810UL, "AIS Class B ""CS"" Static Data Report, Part B" },
 	{ 130066UL, "Route and WP Service - Route/WP, List Attributes" },
 	{ 130067UL, "Route and WP Service - Route, WP Name&Position" },
 	{ 130074UL, "Route and WP Service - WP List, WP Name&Position" },
@@ -695,17 +716,18 @@ tN2KDebugHandler N2KMsgs[] = {
 	{ 130313UL, "Humidity" },
 	{ 130314UL, "Actual Pressure" },
 	{ 130316UL, "Temperature, Extended Range" },
-	{ 129038UL, "AIS Class A Position Report" },
-	{ 129039UL, "AIS Class B Position Report" },
-	{ 129040UL, "AIS Class B Extended Position Report" },
-	{ 129041UL, "AIS Aids to Navigation(AtoN) Report" },
-	{ 129793UL, "AIS UTC and Date Report" },
-	{ 129794UL, "AIS Class A Static and Voyage Related Data" },
-	{ 129798UL, "AIS SAR Aircraft Position Report" },
-	{ 129809UL, "AIS Class B ""CS"" Static Data Report, Part A" },
-	{ 129810UL, "AIS Class B ""CS"" Static Data Report, Part B" },
+	{ 130323UL, "Meteorological Station Data" },
+	{ 130577UL, "Direction Data" },
+	{ 130846UL, "Manu. Proprietary fast-packet non-addressed" },
+	{ 130848UL, "Manu. Proprietary fast-packet non-addressed" },
+	{ 130880UL, "Manu. Proprietary fast-packet non-addressed" },
+	{ 130916UL, "Manu. Proprietary fast-packet non-addressed" },
+	{ 130918UL, "Manu. Proprietary fast-packet non-addressed" },
+	{ 130945UL, "Manu. Proprietary fast-packet non-addressed" },
 	{ 0,0 }
 };
+
+
 
 //*****************************************************************************
 void tN2kMsg::Print(N2kStream *port, bool NoData) const {
@@ -720,7 +742,7 @@ void tN2kMsg::Print(N2kStream *port, bool NoData) const {
   port->print(millis()); port->print(F(" : "));
   port->print(F("Pri:")); port->print(Priority);
   port->print(F(" PGN:")); port->print(PGN);
-	if (N2KMsgs[i].PGN != 0) {
+ 	if (N2KMsgs[i].PGN != 0) {
 		port->print(F(" - "));
 		port->print(N2KMsgs[i].N2KMsg);
 	}
