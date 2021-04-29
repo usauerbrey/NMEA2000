@@ -138,6 +138,7 @@ public:
   void AddUInt64(uint64_t v);
   void AddByte(unsigned char v);
   void AddStr(const char *str, int len, bool UsePgm=false);
+  void AddStr0(const char *str, int len, bool UsePgm=false);
   void AddVarStr(const char *str, bool UsePgm=false);
   void AddBuf(const void *buf, size_t bufLen);
 

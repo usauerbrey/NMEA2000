@@ -214,6 +214,11 @@ void tN2kMsg::AddStr(const char *str, int len, bool UsePgm) {
 }
 
 //*****************************************************************************
+void tN2kMsg::AddStr0(const char *str, int len, bool UsePgm) {
+  SetBufStr(str,len,DataLen,Data,UsePgm,0x00);
+}
+
+//*****************************************************************************
 void tN2kMsg::AddVarStr(const char *str, bool UsePgm) {
   int len=(str!=0?strlen(str):0);
   AddByte(len+2);
