@@ -3638,6 +3638,24 @@ inline bool ParseN2kAISClassBPosition(const tN2kMsg &N2kMsg, uint8_t &MessageID,
                             RAIM, Seconds, COG, SOG, AISTransceiverInformation, Heading, Unit, Display, DSC, Band, Msg22, Mode, State);
 }
 
+//*****************************************************************************
+// AIS extended position reports for Class B
+// Input:
+//  - N2kMsg                NMEA2000 message to decode
+void SetN2kPGN129040(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
+                        double Latitude, double Longitude, bool Accuracy, bool RAIM,
+                        uint8_t Seconds, double COG, double SOG, double Heading, uint8_t VesselType, 
+                        double Length, double Beam, double PosRefStbd, double PosRefBow, tN2kGNSStype GNSStype,
+                        char *Name);
+
+/*
+bool ParseN2kPGN129040(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
+                        double &Latitude, double &Longitude, bool &Accuracy, bool &RAIM,
+                        uint8_t &Seconds, double &COG, double &SOG, double &Heading, tN2kAISUnit &Unit,
+                        bool &Display, bool &DSC, bool &Band, bool &Msg22, tN2kAISMode &Mode, bool &State);
+
+*/
+
 /************************************************************************//**
  * \brief Dedicated structure to handle AIS Aids to Navigation (AtoN) Report
  * 
@@ -4358,6 +4376,46 @@ inline bool ParseN2kPGNSatellitesInView(const tN2kMsg& N2kMsg, uint8_t SVIndex, 
   return ParseN2kPGN129540(N2kMsg,SVIndex,SatelliteInfo);
 }
 
+
+//*****************************************************************************
+/*
+AIS UTC and Date Report 129793
+This parameter group provides data from ITU-R M.1371 message 4 Base Station Report providing position, time, date, and current
+slot number of a base station, and 11 UTC and date response message providing current UTC and date if available. An AIS device
+may generate this parameter group either upon receiving a VHF data link message 4 or 11, or upon receipt of an ISO or NMEA
+request PGN.
+Field#	Field Description
+1		Message ID
+2		Repeat Indicator
+3		User ID
+4		Longitude
+5		Latitude
+6		Position accuracy
+7		RAIM-flag
+8		NMEA 2000 Reserved
+9		Position time
+10		Communication State
+11		AIS Transceiver Information
+12		Position Date
+13		NMEA 2000 Reserved
+14		Type of Electronic Positioning Device
+15		Spare
+*/
+// Input:
+//  - MessageID             Message type
+//  - Repeat                Repeat indicator
+//  - UserID                MMSI
+//  - Name                  Vessel name
+// Output:
+//  - N2kMsg                NMEA2000 message ready to be send.
+void SetN2kPGN129793(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
+                        double Latitude, double Longitude, bool Accuracy, bool RAIM, double Seconds, uint16_t Days, tN2kGNSStype GNSStype);
+/*
+bool ParseN2kPGN129793(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
+                      uint8_t &VesselType, char *Vendor, char *Callsign, double &Length, double &Beam,
+                      double &PosRefStbd, double &PosRefBow, uint32_t &MothershipID);
+
+*/
 
 /************************************************************************//**
  * \brief Setting up PGN 129794 Message "AIS static data class A"

@@ -1435,6 +1435,72 @@ bool ParseN2kPGN129039(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat 
 }
 
 //*****************************************************************************
+// AIS extended position report (class B 129040)
+void SetN2kPGN129040(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
+                        double Latitude, double Longitude, bool Accuracy, bool RAIM,
+                        uint8_t Seconds, double COG, double SOG, double Heading, uint8_t VesselType, 
+                        double Length, double Beam, double PosRefStbd, double PosRefBow, tN2kGNSStype GNSStype,
+                        char *Name )
+{
+    N2kMsg.SetPGN(129040L);
+    N2kMsg.Priority=4;
+    N2kMsg.AddByte((Repeat & 0x03)<<6 | (MessageID & 0x3f));
+    N2kMsg.Add4ByteUInt(UserID);
+    N2kMsg.Add4ByteDouble(Longitude, 1e-07);
+    N2kMsg.Add4ByteDouble(Latitude, 1e-07);
+    N2kMsg.AddByte((Seconds & 0x3f)<<2 | (RAIM & 0x01)<<1 | (Accuracy & 0x01));
+    N2kMsg.Add2ByteUDouble(COG, 1e-04);
+    N2kMsg.Add2ByteUDouble(SOG, 0.01);
+    N2kMsg.AddByte(0xff); // Communication State (19 bits)
+    N2kMsg.AddByte(0xff);
+    N2kMsg.AddByte(VesselType);
+    N2kMsg.Add2ByteUDouble(Heading, 1e-04);
+    N2kMsg.AddByte( (((unsigned char) GNSStype) & 0x0f)<<4 );
+    N2kMsg.Add2ByteDouble(Length, 0.1);
+    N2kMsg.Add2ByteDouble(Beam, 0.1);
+    N2kMsg.Add2ByteDouble(PosRefStbd, 0.1);
+    N2kMsg.Add2ByteDouble(PosRefBow, 0.1);
+    N2kMsg.AddStr(Name, 20);
+
+//		payload->push_back((dteFlag & 0x01) | ((assignedModeFlag << 1) & 0x02) | (0x3C) | ((transceiverInformation & 0x03) << 6));
+//		payload->push_back((transceiverInformation & 0x1C) >> 2);		
+    N2kMsg.AddByte(0x00);
+    N2kMsg.AddByte(0x00);
+}
+
+/*
+bool ParseN2kPGN129040(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
+                        double &Latitude, double &Longitude, bool &Accuracy, bool &RAIM,
+                        uint8_t &Seconds, double &COG, double &SOG, double &Heading, tN2kAISUnit &Unit,
+                        bool &Display, bool &DSC, bool &Band, bool &Msg22, tN2kAISMode &Mode, bool &State)
+{
+    if (N2kMsg.PGN!=129040L) return false;
+
+    int Index=0;
+    unsigned char vb;
+
+    vb=N2kMsg.GetByte(Index); MessageID=(vb & 0x3f); Repeat=(tN2kAISRepeat)(vb>>6 & 0x03);
+    UserID=N2kMsg.Get4ByteUInt(Index);
+    Longitude=N2kMsg.Get4ByteDouble(1e-07, Index);
+    Latitude=N2kMsg.Get4ByteDouble(1e-07, Index);
+    vb=N2kMsg.GetByte(Index); Accuracy=(vb & 0x01); RAIM=(vb>>1 & 0x01); Seconds=(vb>>2 & 0x3f);
+    COG=N2kMsg.Get2ByteUDouble(1e-04, Index);
+    SOG=N2kMsg.Get2ByteUDouble(0.01, Index);
+    vb=N2kMsg.GetByte(Index); // Communication State (19 bits)
+    vb=N2kMsg.GetByte(Index);
+    vb=N2kMsg.GetByte(Index); // AIS transceiver information (5 bits)
+    Heading=N2kMsg.Get2ByteUDouble(1e-04, Index);
+    vb=N2kMsg.GetByte(Index); // Regional application
+    vb=N2kMsg.GetByte(Index);
+    Unit=(tN2kAISUnit)(vb>>2 & 0x01); Display=(vb>>3 & 0x01); DSC=(vb>>4 & 0x01);
+    Band=(vb>>5 & 0x01); Msg22=(vb>>6 & 0x01); Mode=(tN2kAISMode)(vb>>7 & 0x01);
+    vb=N2kMsg.GetByte(Index); State=(vb & 0x01);
+
+    return true;
+}
+*/
+
+//*****************************************************************************
 // AIS Aids to Navigation (AtoN) Report (PGN 129041)
 void SetN2kPGN129041(tN2kMsg &N2kMsg, const tN2kAISAtoNReportData &N2kData) {
     N2kMsg.SetPGN(129041L);
@@ -1603,6 +1669,111 @@ bool AppendN2kPGN129285(tN2kMsg &N2kMsg, uint16_t ID, const char* Name, double L
         return false;
     }
 }
+
+//*****************************************************************************
+/*
+AIS UTC and Date Report 129793
+This parameter group provides data from ITU-R M.1371 message 4 Base Station Report providing position, time, date, and current
+slot number of a base station, and 11 UTC and date response message providing current UTC and date if available. An AIS device
+may generate this parameter group either upon receiving a VHF data link message 4 or 11, or upon receipt of an ISO or NMEA
+request PGN.
+Field#	Field Description
+1		Message ID
+2		Repeat Indicator
+3		User ID
+4		Longitude
+5		Latitude
+6		Position accuracy
+7		RAIM-flag
+8		NMEA 2000 Reserved
+9		Position time
+10		Communication State
+11		AIS Transceiver Information
+12		Position Date
+13		NMEA 2000 Reserved
+14		Type of Electronic Positioning Device
+15		Spare
+*/
+void SetN2kPGN129793(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
+                        double Latitude, double Longitude, bool Accuracy, bool RAIM, double Seconds, uint16_t Days, tN2kGNSStype GNSStype)
+{
+/*
+		wxDateTime now;
+		// Note that wxDateTime month is zero indexed
+		now.Set(day, static_cast<wxDateTime::Month>(month - 1), year, hour < AIS_INVALID_HOUR ? hour : 0,
+			minute < AIS_INVALID_MINUTE ? minute : 0,
+			second < AIS_INVALID_SECOND ? second : 0, 0);
+		wxDateTime epoch;
+		epoch.ParseDateTime("00:00:00 01-01-1970");
+		wxTimeSpan diff = now - epoch;
+
+		unsigned short daysSinceEpoch = diff.GetDays();
+		unsigned int secondsSinceMidnight = (unsigned int)(diff.GetSeconds().ToLong() - (diff.GetDays() * 24 * 60 * 60)) * 10000;
+
+		payload->push_back(secondsSinceMidnight & 0xFF);
+		payload->push_back((secondsSinceMidnight >> 8) & 0xFF);
+		payload->push_back((secondsSinceMidnight >> 16) & 0xFF);
+		payload->push_back((secondsSinceMidnight >> 24) & 0xFF);
+
+		payload->push_back(communicationState & 0xFF);
+		payload->push_back((communicationState >> 8) & 0xFF);
+		payload->push_back(((communicationState >> 16) & 0x07) | ((transceiverInformation << 3) & 0xF8));
+
+		payload->push_back(daysSinceEpoch & 0xFF);
+		payload->push_back((daysSinceEpoch >> 8) & 0xFF);
+
+		payload->push_back(((gnssType << 4) & 0xF0) | 0x0F);
+
+		payload->push_back(spare & 0xFF);
+*/
+    N2kMsg.SetPGN(129793L);
+    N2kMsg.Priority=6;
+    N2kMsg.AddByte((Repeat & 0x03)<<6 | (MessageID & 0x3f));
+    N2kMsg.Add4ByteUInt(UserID);
+    N2kMsg.Add4ByteDouble(Longitude, 1e-07);
+    N2kMsg.Add4ByteDouble(Latitude, 1e-07);
+    N2kMsg.AddByte((RAIM & 0x01)<<1 | (Accuracy & 0x01) | 0xFC); // Note reserved value
+    N2kMsg.Add4ByteUDouble(Seconds,0.0001);
+    N2kMsg.AddByte(0xff); // Communication State (19 bits)
+    N2kMsg.AddByte(0xff);
+//    N2kMsg.AddByte(0xff); // AIS transceiver information (5 bits)
+    N2kMsg.AddByte(0); // AIS transceiver information (5 bits)
+    N2kMsg.Add2ByteUInt(Days);
+    N2kMsg.AddByte((GNSStype & 0x0f)<<4 | 0x0f);
+    N2kMsg.AddByte(0xff);
+}
+/*
+bool ParseN2kPGN129793(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
+                        uint32_t &IMOnumber, char *Callsign, char *Name, uint8_t &VesselType, double &Length,
+                        double &Beam, double &PosRefStbd, double &PosRefBow, uint16_t &ETAdate, double &ETAtime,
+                        double &Draught, char *Destination, tN2kAISVersion &AISversion, tN2kGNSStype &GNSStype,
+                        tN2kAISDTE &DTE, tN2kAISTransceiverInformation &AISTransceiverInformation)
+{
+    if (N2kMsg.PGN!=129793L) return false;
+
+    int Index=0;
+    unsigned char vb;
+
+    vb=N2kMsg.GetByte(Index); MessageID=(vb & 0x3f); Repeat=(tN2kAISRepeat)(vb>>6 & 0x03);
+    UserID=N2kMsg.Get4ByteUInt(Index);
+    IMOnumber=N2kMsg.Get4ByteUInt(Index);
+    N2kMsg.GetStr(Callsign, 7, Index);
+    N2kMsg.GetStr(Name, 20, Index);
+    VesselType=N2kMsg.GetByte(Index);
+    Length=N2kMsg.Get2ByteDouble(0.1, Index);
+    Beam=N2kMsg.Get2ByteDouble(0.1, Index);
+    PosRefStbd=N2kMsg.Get2ByteDouble(0.1, Index);
+    PosRefBow=N2kMsg.Get2ByteDouble(0.1, Index);
+    ETAdate=N2kMsg.Get2ByteUInt(Index);
+    ETAtime=N2kMsg.Get4ByteUDouble(0.0001, Index);
+    Draught=N2kMsg.Get2ByteDouble(0.01, Index);
+    N2kMsg.GetStr(Destination, 20, Index);
+    vb=N2kMsg.GetByte(Index); AISversion=(tN2kAISVersion)(vb & 0x03); GNSStype=(tN2kGNSStype)(vb>>2 & 0x0f); DTE=(tN2kAISDTE)(vb>>6 & 0x01);
+    vb=N2kMsg.GetByte(Index); AISTransceiverInformation=(tN2kAISTransceiverInformation)(vb & 0x1f);
+
+    return true;
+}
+*/
 
 //*****************************************************************************
 // AIS static data A
