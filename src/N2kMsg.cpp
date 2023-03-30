@@ -210,7 +210,13 @@ void tN2kMsg::AddByte(unsigned char v) {
 
 //*****************************************************************************
 void tN2kMsg::AddStr(const char *str, int len, bool UsePgm) {
-  SetBufStr(str,len,DataLen,Data,UsePgm,0xff);
+  SetBufStr(str,len,DataLen,Data,UsePgm,0x20);
+//  SetBufStr(str,len,DataLen,Data,UsePgm,0xff);
+}
+
+//*****************************************************************************
+void tN2kMsg::AddStr0(const char *str, int len, bool UsePgm) {
+  SetBufStr(str,len,DataLen,Data,UsePgm,0x00);
 }
 
 //*****************************************************************************

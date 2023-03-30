@@ -951,6 +951,16 @@ public:
 
  /************************************************************************//**
   * \brief Add string value to the buffer
+  * The string will be added to the end (indicated by \ref DataLen) of
+  * the byte array \ref Data.
+  * \param str   String as pointer to a char array
+  * \param len   Length of the string
+  * \param UsePgm {bool} use the pgm_read_byte function
+  */
+  void AddStr0(const char *str, int len, bool UsePgm=false);
+
+ /************************************************************************//**
+  * \brief Add string value to the buffer
   * This method determines the length of the string by it self using strlen().
   * The string will be added to the end (indicated by \ref DataLen) of
   * the byte array \ref Data.
