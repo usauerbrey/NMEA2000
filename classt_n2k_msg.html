@@ -182,6 +182,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a719ea5181274ce242045a46fe7a8af1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classt_n2k_msg.html#a719ea5181274ce242045a46fe7a8af1c">AddStr</a> (const char *str, int len, bool UsePgm=false)</td></tr>
 <tr class="memdesc:a719ea5181274ce242045a46fe7a8af1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add string value to the buffer The string will be added to the end (indicated by <a class="el" href="classt_n2k_msg.html#af304b7211179a8216138fe61a1e6be9f">DataLen</a>) of the byte array <a class="el" href="classt_n2k_msg.html#a01ad108e237eb28230b45028a2fbc924">Data</a>.  <a href="classt_n2k_msg.html#a719ea5181274ce242045a46fe7a8af1c">More...</a><br /></td></tr>
 <tr class="separator:a719ea5181274ce242045a46fe7a8af1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f02e06148219704b139eb3300fe6ed3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classt_n2k_msg.html#a6f02e06148219704b139eb3300fe6ed3">AddStr0</a> (const char *str, int len, bool UsePgm=false)</td></tr>
+<tr class="memdesc:a6f02e06148219704b139eb3300fe6ed3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add string value to the buffer The string will be added to the end (indicated by <a class="el" href="classt_n2k_msg.html#af304b7211179a8216138fe61a1e6be9f">DataLen</a>) of the byte array <a class="el" href="classt_n2k_msg.html#a01ad108e237eb28230b45028a2fbc924">Data</a>.  <a href="classt_n2k_msg.html#a6f02e06148219704b139eb3300fe6ed3">More...</a><br /></td></tr>
+<tr class="separator:a6f02e06148219704b139eb3300fe6ed3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a602a0146af8d99e6c91fd8afd11ec245"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classt_n2k_msg.html#a602a0146af8d99e6c91fd8afd11ec245">AddUInt64</a> (uint64_t v)</td></tr>
 <tr class="memdesc:a602a0146af8d99e6c91fd8afd11ec245"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add unsigned integer value to the buffer using 8 bytes The value will be added to the end (indicated by <a class="el" href="classt_n2k_msg.html#af304b7211179a8216138fe61a1e6be9f">DataLen</a>) of the byte array <a class="el" href="classt_n2k_msg.html#a01ad108e237eb28230b45028a2fbc924">Data</a>.  <a href="classt_n2k_msg.html#a602a0146af8d99e6c91fd8afd11ec245">More...</a><br /></td></tr>
 <tr class="separator:a602a0146af8d99e6c91fd8afd11ec245"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -915,7 +918,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00225">225</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00231">231</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1032,6 +1035,52 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6f02e06148219704b139eb3300fe6ed3" name="a6f02e06148219704b139eb3300fe6ed3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6f02e06148219704b139eb3300fe6ed3">&#9670;&nbsp;</a></span>AddStr0()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void tN2kMsg::AddStr0 </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>str</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>UsePgm</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Add string value to the buffer The string will be added to the end (indicated by <a class="el" href="classt_n2k_msg.html#af304b7211179a8216138fe61a1e6be9f">DataLen</a>) of the byte array <a class="el" href="classt_n2k_msg.html#a01ad108e237eb28230b45028a2fbc924">Data</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">str</td><td>String as pointer to a char array </td></tr>
+    <tr><td class="paramname">len</td><td>Length of the string </td></tr>
+    <tr><td class="paramname">UsePgm</td><td>{bool} use the pgm_read_byte function </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00218">218</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+
+</div>
+</div>
 <a id="a602a0146af8d99e6c91fd8afd11ec245" name="a602a0146af8d99e6c91fd8afd11ec245"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a602a0146af8d99e6c91fd8afd11ec245">&#9670;&nbsp;</a></span>AddUInt64()</h2>
 
@@ -1095,7 +1144,7 @@ Protected Attributes</h2></td></tr>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00217">217</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00223">223</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1241,7 +1290,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00279">279</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00285">285</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1288,7 +1337,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00286">286</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00292">292</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1335,7 +1384,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00293">293</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00299">299</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1375,7 +1424,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>integer value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00244">244</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00250">250</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1422,7 +1471,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00300">300</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00306">306</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1462,7 +1511,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>integer value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00251">251</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00257">257</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1509,7 +1558,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00307">307</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00313">313</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1549,7 +1598,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>integer value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00258">258</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00264">264</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1596,7 +1645,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00314">314</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00320">320</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1643,7 +1692,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00321">321</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00327">327</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1683,7 +1732,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>integer value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00265">265</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00271">271</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1730,7 +1779,7 @@ Protected Attributes</h2></td></tr>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>double value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00328">328</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00334">334</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1809,7 +1858,7 @@ Protected Attributes</h2></td></tr>
 <dd>
 false not successful, no data available </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00413">413</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00419">419</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1838,7 +1887,7 @@ false not successful, no data available </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>value represented in the byte array </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00237">237</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00243">243</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1878,7 +1927,7 @@ false not successful, no data available </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>integer value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00335">335</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00341">341</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -1964,7 +2013,7 @@ false not successful, no data available </dd></dl>
 <dd>
 false not successful, no string data available </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00342">342</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00348">348</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -2027,7 +2076,7 @@ false not successful, no string data available </dd></dl>
 <dd>
 false not successful, no string data available </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00368">368</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00374">374</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -2067,7 +2116,7 @@ false not successful, no string data available </dd></dl>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>integer value </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00272">272</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00278">278</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -2116,7 +2165,7 @@ false not successful, no string data available </dd></dl>
 <dd>
 false not successful, no string data available </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00399">399</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00405">405</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -2272,7 +2321,7 @@ false message is not valide </dd></dl>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00807">807</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00813">813</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -2329,7 +2378,7 @@ false message is not valide </dd></dl>
   </dd>
 </dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00836">836</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00842">842</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -2371,7 +2420,7 @@ false message is not valide </dd></dl>
 <dd>
 false Index is grater then DataLen </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00440">440</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00446">446</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
@@ -2413,7 +2462,7 @@ false Index is grater then DataLen </dd></dl>
 <dd>
 false Index is grater then DataLen </dd></dl>
 
-<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00430">430</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
+<p class="definition">Definition at line <a class="el" href="_n2k_msg_8cpp_source.html#l00436">436</a> of file <a class="el" href="_n2k_msg_8cpp_source.html">N2kMsg.cpp</a>.</p>
 
 </div>
 </div>
