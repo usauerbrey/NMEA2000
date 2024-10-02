@@ -1,7 +1,7 @@
 /*
 NMEA2000.cpp
 
-Copyright (c) 2015-2023 Timo Lappalainen, Kave Oy, www.kave.fi
+Copyright (c) 2015-2024 Timo Lappalainen, Kave Oy, www.kave.fi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -108,15 +108,15 @@ void N2kPrintFreeMemory(const char *Source) {
 
 /** \brief Timeout value for the ISO Address Claim in ms*/
 #define N2kAddressClaimTimeout 250
-/** \brief Maximum value for the Iso Heartbeat interval in ms */
+/** \brief Maximum value for the ISO Heartbeat interval in ms */
 #define MaxHeartbeatInterval 655320UL
 
 /** \brief Max frames, which can be received at time */
-#define TP_MAX_FRAMES 5 
+#define TP_MAX_FRAMES 5
 /** \brief Multi packet connection management, TP.CM */
-#define TP_CM 60416L 
+#define TP_CM 60416L
 /** \brief Multi packet data transfer */
-#define TP_DT 60160L 
+#define TP_DT 60160L
 /** \brief Multi packet connection management, Broadcast Announce Message */
 #define TP_CM_BAM    32
 /** \brief Multi packet connection management, Request To Send */
@@ -130,13 +130,13 @@ void N2kPrintFreeMemory(const char *Source) {
 
 /** \brief Already in one or more connection managed sessions and cannot 
  * support another */
-#define TP_CM_AbortBusy 1	
+#define TP_CM_AbortBusy 1
 /** \brief System resources were needed for another task so this connection 
  * managed session was terminated */
-#define TP_CM_AbortNoResources 2	
-/** \brief A timeout occurred and this is the connection abort to close the s
- * ession */
-#define TP_CM_AbortTimeout 3 
+#define TP_CM_AbortNoResources 2
+/** \brief A timeout occurred and this is the connection abort to close the
+ * session */
+#define TP_CM_AbortTimeout 3
 
 /************************************************************************//**
  * \
@@ -154,7 +154,7 @@ void N2kPrintFreeMemory(const char *Source) {
  * - 126996L Product information, pri=6, period=NA
  * - 126998L Configuration information, pri=6, period=NA
  * 
- * This lis is terminated by 0.
+ * This list is terminated by 0.
  *
  */
 const unsigned long DefTransmitMessages[] PROGMEM = {
@@ -188,7 +188,7 @@ const unsigned long DefTransmitMessages[] PROGMEM = {
  * - 65240L Commanded Address
  * - 126208L NMEA Request/Command/Acknowledge group function
  * 
- * This lis is terminated by 0.
+ * This list is terminated by 0.
  *
  */
 const unsigned long DefReceiveMessages[] PROGMEM = {
@@ -250,12 +250,14 @@ bool IsFastPacketSystemMessage(unsigned long PGN) {
  *              - 127245L: Rudder, pri=2, period=100
  *              - 127250L: Vessel Heading, pri=2, period=100
  *              - 127251L: Rate of Turn, pri=2, period=100
+ *              - 127252L: Heave, pri=3, period=100
  *              - 127257L: Attitude, pri=3, period=1000
  *              - 127488L: Engine parameters rapid, rapid Update, pri=2, period=100
  *              - 127493L: Transmission parameters: dynamic, pri=2, period=100
  *              - 127501L: Binary status report, pri=3, period=NA
  *              - 127505L: Fluid level, pri=6, period=2500
  *              - 127508L: Battery Status, pri=6, period=1500
+ *              - 127750L: Charger status new, pri=6, period=1500
  *              - 128259L: Boat speed, pri=2, period=1000
  *              - 128267L: Water depth, pri=3, period=1000
  *              - 129025L: Lat/lon rapid, pri=2, period=100
@@ -267,7 +269,7 @@ bool IsFastPacketSystemMessage(unsigned long PGN) {
  *              - 130312L: Temperature, pri=5, period=2000
  *              - 130313L: Humidity, pri=5, period=2000
  *              - 130314L: Pressure, pri=5, period=2000
- *              - 130316L: Temperature extended range, pri=5, period=NA
+ *              - 130316L: Temperature extended range, pri=5, period=2000
  *              - 130576L: Small Craft Status (Trim Tab position), pri=2, period=200
  * 
  * 
@@ -280,12 +282,14 @@ bool IsDefaultSingleFrameMessage(unsigned long PGN) {
                                       case 127245L: // Rudder, pri=2, period=100
                                       case 127250L: // Vessel Heading, pri=2, period=100
                                       case 127251L: // Rate of Turn, pri=2, period=100
+                                      case 127252L: // Heave, pri=3, period=100
                                       case 127257L: // Attitude, pri=3, period=1000
                                       case 127488L: // Engine parameters rapid, rapid Update, pri=2, period=100
                                       case 127493L: // Transmission parameters: dynamic, pri=2, period=100
                                       case 127501L: // Binary status report, pri=3, period=NA
                                       case 127505L: // Fluid level, pri=6, period=2500
                                       case 127508L: // Battery Status, pri=6, period=1500
+                                      case 127750L: // Charger status new, pri=6, period=1500
                                       case 128259L: // Boat speed, pri=2, period=1000
                                       case 128267L: // Water depth, pri=3, period=1000
                                       case 129025L: // Lat/lon rapid, pri=2, period=100
@@ -297,7 +301,7 @@ bool IsDefaultSingleFrameMessage(unsigned long PGN) {
                                       case 130312L: // Temperature, pri=5, period=2000
                                       case 130313L: // Humidity, pri=5, period=2000
                                       case 130314L: // Pressure, pri=5, period=2000
-                                      case 130316L: // Temperature extended range, pri=5, period=NA
+                                      case 130316L: // Temperature extended range, pri=5, period=2000
                                       case 130576L: // Small Craft Status (Trim Tab position), pri=2, period=200
                                       return true;
                                   }
@@ -336,9 +340,13 @@ bool IsMandatoryFastPacketMessage(unsigned long PGN) {
  *          - 126986L: Alert Configuration, pri=2, period=NA
  *          - 126987L: Alert Threshold, pri=2, period=NA
  *          - 126988L: Alert Value, pri=2, period=10000
- *          - 127233L: Alert Value, pri=3, period=NA
+ *          - 127233L: Man Overboard Notification(MOB), pri=3, period=NA
  *          - 127237L: Heading/Track control, pri=2, period=250
  *          - 127489L: Engine parameters dynamic, pri=2, period=500
+ *          - 127490L: Electric Drive Status (Dynamic), pri=1, period=1500
+ *          - 127491L: Electric Energy Storage Status (Dynamic), pri=7, period=1500
+ *          - 127494L: Electric Drive Information, pri=4, period=NA
+ *          - 127495L: Electric Energy Storage Information, pri=6, period=NA
  *          - 127496L: Trip fuel consumption, vessel, pri=5, period=1000
  *          - 127497L: Trip fuel consumption, engine, pri=5, period=1000
  *          - 127498L: Engine parameters static, pri=5, period=NA
@@ -353,7 +361,8 @@ bool IsMandatoryFastPacketMessage(unsigned long PGN) {
  *          - 127513L: Battery configuration status, pri=6, period=NA
  *          - 127514L: AGS Status, pri=6, period=1500
  *          - 128275L: Distance log, pri=6, period=1000
- *          - 128520L: Tracked Target Data, pri=2, period=1000
+ *          - 128520L: Tracked target data, pri=2, period=1000
+ *          - 128538L: Elevator car status, pri=6, period=100
  *          - 129029L: GNSS Position Data, pri=3, period=1000
  *          - 129038L: AIS Class A Position Report, pri=4, period=NA
  *          - 129039L: AIS Class B Position Report, pri=4, period=NA
@@ -396,6 +405,9 @@ bool IsMandatoryFastPacketMessage(unsigned long PGN) {
  *          - 129811L: AIS Single Slot Binary Message, pri=5, period=NA
  *          - 129812L: AIS Multi Slot Binary Message, pri=5, period=NA
  *          - 129813L: AIS Long-Range Broadcast Message, pri=5, period=NA
+ *          - 129814L: AIS single slot binary message, pri=5, period=NA
+ *          - 129815L: AIS multi slot binary message, pri=5, period=NA
+ *          - 129816L: AIS acknowledge, pri=7, period=NA
  *          - 130052L: Loran-C TD Data, pri=3, period=1000
  *          - 130053L: Loran-C Range Data, pri=3, period=1000
  *          - 130054L: Loran-C Signal Data, pri=3, period=1000
@@ -417,9 +429,27 @@ bool IsMandatoryFastPacketMessage(unsigned long PGN) {
  *          - 130322L: Current Station Data, pri=6, period=1000
  *          - 130323L: Meteorological Station Data, pri=6, period=1000
  *          - 130324L: Moored Buoy Station Data, pri=6, period=1000
- *          - 130567L: Watermaker Input Setting and Status, pri=6, period=2500
- *          - 130577L: Direction Data PGN, pri=3, period=1000
- *          - 130578L: Vessel Speed Components, pri=2, period=250
+ *          - 130330L: Lighting system settings, pri=7, period=NA
+ *          - 130561L: Lighting zone, pri=7, period=NA
+ *          - 130562L: Lighting scene, pri=7, period=NA
+ *          - 130563L: Lighting device, pri=7, period=NA
+ *          - 130564L: Lighting device enumeration, pri=7, period=NA
+ *          - 130565L: Lighting color sequence, pri=7, period=NA
+ *          - 130566L: Lighting program, pri=7, period=NA
+ *          - 130567L: Watermaker input setting and status, pri=6, period=2500
+ *          - 130577L: Direction data PGN, pri=3, period=1000
+ *          - 130578L: Vessel speed components, pri=2, period=250
+ *          - 130569L: Entertainment current file and status, pri=6, period=500
+ *          - 130570L: Entertainment library data file, pri=6, period=NA
+ *          - 130571L: Entertainment library data group, pri=6, period=NA
+ *          - 130572L: Entertainment library data search, pri=6, period=NA
+ *          - 130573L: Entertainment supported source data, pri=6, period=NA
+ *          - 130574L: Entertainment supported zone data, pri=6, period=NA
+ *          - 130580L: Entertainment system configuration status, pri=6, period=NA
+ *          - 130581L: Entertainment zone configuration status, pri=6, period=NA
+ *          - 130583L: Entertainment available dudio EQ presets, pri=6, period=NA
+ *          - 130584L: Entertainment bluetooth devices, pri=6, period=NA
+ *          - 130586L: Entertainment zone configuration status, pri=6, period=NA
  * \return false 
  */
 bool IsDefaultFastPacketMessage(unsigned long PGN) {
@@ -430,9 +460,13 @@ bool IsDefaultFastPacketMessage(unsigned long PGN) {
                                       case 126986L: // Alert Configuration, pri=2, period=NA
                                       case 126987L: // Alert Threshold, pri=2, period=NA
                                       case 126988L: // Alert Value, pri=2, period=10000
-                                      case 127233L: // Alert Value, pri=3, period=NA
+                                      case 127233L: // Man Overboard Notification(MOB), pri=3, period=NA
                                       case 127237L: // Heading/Track control, pri=2, period=250
                                       case 127489L: // Engine parameters dynamic, pri=2, period=500
+                                      case 127490L: // Electric Drive Status (Dynamic), pri=1, period=1500 
+                                      case 127491L: // Electric Energy Storage Status (Dynamic), pri=7, period=1500
+                                      case 127494L: // Electric Drive Information, pri=4, period=NA
+                                      case 127495L: // Electric Energy Storage Information, pri=6, period=NA
                                       case 127496L: // Trip fuel consumption, vessel, pri=5, period=1000
                                       case 127497L: // Trip fuel consumption, engine, pri=5, period=1000
                                       case 127498L: // Engine parameters static, pri=5, period=NA
@@ -448,6 +482,7 @@ bool IsDefaultFastPacketMessage(unsigned long PGN) {
                                       case 127514L: // AGS Status, pri=6, period=1500
                                       case 128275L: // Distance log, pri=6, period=1000
                                       case 128520L: // Tracked Target Data, pri=2, period=1000
+                                      case 128538L: // Elevator car status, pri=6, period=100
                                       case 129029L: // GNSS Position Data, pri=3, period=1000
                                       case 129038L: // AIS Class A Position Report, pri=4, period=NA
                                       case 129039L: // AIS Class B Position Report, pri=4, period=NA
@@ -490,6 +525,9 @@ bool IsDefaultFastPacketMessage(unsigned long PGN) {
                                       case 129811L: // AIS Single Slot Binary Message, pri=5, period=NA
                                       case 129812L: // AIS Multi Slot Binary Message, pri=5, period=NA
                                       case 129813L: // AIS Long-Range Broadcast Message, pri=5, period=NA
+                                      case 129814L: // AIS single slot binary message, pri=5, period=NA
+                                      case 129815L: // AIS multi slot binary message, pri=5, period=NA
+                                      case 129816L: // AIS acknowledge, pri=7, period=NA
                                       case 130052L: // Loran-C TD Data, pri=3, period=1000
                                       case 130053L: // Loran-C Range Data, pri=3, period=1000
                                       case 130054L: // Loran-C Signal Data, pri=3, period=1000
@@ -511,9 +549,28 @@ bool IsDefaultFastPacketMessage(unsigned long PGN) {
                                       case 130322L: // Current Station Data, pri=6, period=1000
                                       case 130323L: // Meteorological Station Data, pri=6, period=1000
                                       case 130324L: // Moored Buoy Station Data, pri=6, period=1000
+                                      case 130330L: // Lighting system settings, pri=7, period=NA
+                                      case 130561L: // Lighting zone, pri=7, period=NA
+                                      case 130562L: // Lighting scene, pri=7, period=NA
+                                      case 130563L: // Lighting device, pri=7, period=NA
+                                      case 130564L: // Lighting device enumeration, pri=7, period=NA
+                                      case 130565L: // Lighting color sequence, pri=7, period=NA
+                                      case 130566L: // Lighting program, pri=7, period=NA
                                       case 130567L: // Watermaker Input Setting and Status, pri=6, period=2500
                                       case 130577L: // Direction Data PGN, pri=3, period=1000
                                       case 130578L: // Vessel Speed Components, pri=2, period=250
+                                      // Entertainment PGNs
+                                      case 130569L: // Current File and Status, pri=6, period=500
+                                      case 130570L: // Library Data File, pri=6, period=NA
+                                      case 130571L: // Library Data Group, pri=6, period=NA
+                                      case 130572L: // Library Data Search, pri=6, period=NA
+                                      case 130573L: // Supported Source Data, pri=6, period=NA
+                                      case 130574L: // Supported Zone Data, pri=6, period=NA
+                                      case 130580L: // System Configuration Status, pri=6, period=NA
+                                      case 130581L: // Zone Configuration Status, pri=6, period=NA
+                                      case 130583L: // Available Audio EQ Presets, pri=6, period=NA
+                                      case 130584L: // Bluetooth Devices, pri=6, period=NA
+                                      case 130586L: // Zone Configuration Status, pri=6, period=NA
                                       return true;
                                   }
                                   return false;
@@ -537,10 +594,28 @@ bool tNMEA2000::IsProprietaryMessage(unsigned long PGN) {
   return IsProprietaryFastPacketMessage(PGN) || ( PGN==61184L ) || ( 65280L<=PGN && PGN<=65535L );
 }
 
+bool IgnoreBroadcastISORequest(unsigned long RequestedPGN) {
+  switch (RequestedPGN) {
+    case 127500L:
+    case 130060L:
+    case 130061L:
+    case 130330L:
+    case 130561L:
+    case 130562L:
+    case 130563L:
+    case 130564L:
+    case 130565L:
+    case 130566L:
+      return true;
+  }
+
+  return false;
+}
+
 /************************************************************************//**
  * \brief Default Product Information 
  * 
- * This structure holds the default Produkt Information of the device:
+ * This structure holds the default Product Information of the device:
  * 
  * - N2kVersion = 2101
  * - ProductCode = 666
@@ -1197,9 +1272,12 @@ bool tNMEA2000::Open() {
     OpenState=os_Open;
     StartAddressClaim();
     tN2kSyncScheduler::SetSyncOffset();
-    if ( OnOpen!=0 ) OnOpen();
+    #if !defined(N2K_NO_HEARTBEAT_SUPPORT)
     SetHeartbeatIntervalAndOffset(DefaultHeartbeatInterval,10000); // Init default hearbeat interval and offset.
+    #endif
+    if ( OnOpen!=0 ) OnOpen();
   } else {
+    // Read rubbish out from CAN controller
     unsigned long canId;
     unsigned char len = 0;
     unsigned char buf[8];
@@ -2009,7 +2087,7 @@ uint8_t tNMEA2000::SetN2kCANBufMsg(unsigned long canId, unsigned char len, unsig
 }
 
 //*****************************************************************************
- int tNMEA2000::FindSourceDeviceIndex(unsigned char Source) {
+ int tNMEA2000::FindSourceDeviceIndex(unsigned char Source) const {
    int i=DeviceCount;
 
      if ( Source<=253 ) {
@@ -2244,7 +2322,7 @@ bool tNMEA2000::SendConfigurationInformation(int DeviceIndex) {
 }
 
 //*****************************************************************************
-void tNMEA2000::RespondISORequest(const tN2kMsg &N2kMsg, unsigned long RequestedPGN, int iDev) {
+void tNMEA2000::RespondISORequest(const tN2kMsg &N2kMsg, bool Addressed, unsigned long RequestedPGN, int iDev) {
     if ( IsAddressClaimStarted(iDev) ) return; // We do not respond any queries during address claiming.
 
     switch (RequestedPGN) {
@@ -2264,18 +2342,24 @@ void tNMEA2000::RespondISORequest(const tN2kMsg &N2kMsg, unsigned long Requested
       default:
         /* If user has established a handler */
         if (ISORqstHandler!=0) {
+          // Do not respond to broadcast request for some messages
+          if ( !Addressed && IgnoreBroadcastISORequest(RequestedPGN) ) return;
+
           /* and if it handled the request, we are done */
           if (ISORqstHandler(RequestedPGN,N2kMsg.Source,iDev)) {
             return;
           }
         }
 
-        tN2kMsg   N2kMsgR;
-        // No user handler, or there was one and it retured FALSE.  Send NAK
-        SetN2kPGNISOAcknowledgement(N2kMsgR,1,0xff,RequestedPGN);
-        // Direct the response to original requester.
-        N2kMsgR.Destination  = N2kMsg.Source;
-        SendMsg(N2kMsgR,iDev);
+        // Respond NAK only for addressed messages
+        if ( Addressed ) {
+          tN2kMsg   N2kMsgR;
+          // No user handler, or there was one and it retured FALSE.  Send NAK
+          SetN2kPGNISOAcknowledgement(N2kMsgR,1,0xff,RequestedPGN);
+          // Direct the response to original requester.
+          N2kMsgR.Destination  = N2kMsg.Source;
+          SendMsg(N2kMsgR,iDev);
+        }
     }
 }
 
@@ -2289,9 +2373,9 @@ void tNMEA2000::HandleISORequest(const tN2kMsg &N2kMsg) {
     ParseN2kPGNISORequest(N2kMsg,RequestedPGN);
     N2kMsgDbgStart("ISO request: "); N2kMsgDbgln(RequestedPGN);
     if (tNMEA2000::IsBroadcast(N2kMsg.Destination)) { // broadcast -> respond from all devices
-      for (iDev=0; iDev<DeviceCount; iDev++) RespondISORequest(N2kMsg,RequestedPGN,iDev);
+      for (iDev=0; iDev<DeviceCount; iDev++) RespondISORequest(N2kMsg,false,RequestedPGN,iDev);
     } else {
-      RespondISORequest(N2kMsg,RequestedPGN,iDev);
+      RespondISORequest(N2kMsg,true,RequestedPGN,iDev);
     }
 }
 
@@ -2571,9 +2655,9 @@ void tNMEA2000::RunMessageHandlers(const tN2kMsg &N2kMsg) {
   if ( MsgHandler!=0 ) MsgHandler(N2kMsg);
 
   tMsgHandler *MsgHandler=MsgHandlers;
-  // Loop through all pgn handlers
+  // Loop through all PGN handlers
   for ( ;MsgHandler!=0 && MsgHandler->GetPGN()==0; MsgHandler=MsgHandler->pNext) MsgHandler->HandleMsg(N2kMsg);
-  // Loop through specific pgn handlers
+  // Loop through specific PGN handlers
   for ( ;MsgHandler!=0 && MsgHandler->GetPGN()<=N2kMsg.PGN; MsgHandler=MsgHandler->pNext) {
     if ( MsgHandler->GetPGN()==N2kMsg.PGN ) MsgHandler->HandleMsg(N2kMsg);
   }
@@ -2769,7 +2853,7 @@ size_t StrLen(const char *str) {
 }
 
 //*****************************************************************************
-// Configuration information
+// Configuration Information
 void SetN2kPGN126998(tN2kMsg &N2kMsg,
                      const char *ManufacturerInformation,
                      const char *InstallationDescription1,
@@ -2833,7 +2917,7 @@ bool ParseN2kPGN126998(const tN2kMsg& N2kMsg,
 }
 
 //*****************************************************************************
-// Iso request
+// ISO Request
 void SetN2kPGN59904(tN2kMsg &N2kMsg, uint8_t Destination, unsigned long RequestedPGN) {
     N2kMsg.SetPGN(59904L);
     N2kMsg.Destination=Destination;

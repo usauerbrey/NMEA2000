@@ -1,6 +1,6 @@
 /* N2kMessages.h
  * 
- * Copyright (c) 2015-2023 Timo Lappalainen, Kave Oy, www.kave.fi
+ * Copyright (c) 2015-2024 Timo Lappalainen, Kave Oy, www.kave.fi
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -175,15 +175,18 @@ inline double KnotsToms(double v) { return N2kIsNA(v)?v:v*0.51444444444444444444
  * \brief Setting up PGN126992 Message "System date/time"
  * \ingroup group_msgSetUp
  * 
- * The purpose of this PGN isto provide a regular transmission of UTC time
+ * The purpose of this PGN is to provide a regular transmission of UTC time
  * and date; optionally synchronized to other parameter groups from the same
  * source.
  * 
  * The default Priority is set to 3.
  * 
  * \param N2kMsg        Reference to a N2kMsg Object
- * \param SID           Sequence ID. If your device is e.g. boat speed and heading at same time, you can set same SID for different messages to link this PGN to other related PGNs. When no linkage exists, the value of the SID shall be set to 255
- *                      to indicate that they are measured at same time.
+ * \param SID           Sequence ID. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                      \n
+ *                      SID has been designed to make difference between sensor sampling or calculation.
+ *                      Same SID in different PGNs sent by same device defines that values on PGN:s has been sampled or 
+ *                      calculated at same time.
  * \param SystemDate    Days since 1970-01-01 (UTC)
  * \param SystemTime    seconds since midnight (UTC)
  * \param TimeSource    Source of the Systemtime 
@@ -215,7 +218,7 @@ inline void SetN2kSystemTime(tN2kMsg &N2kMsg, unsigned char SID, uint16_t System
  * time and date. To provide synchronism for measurement data.
  * 
  * \param N2kMsg      N2kMsg Object, Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param SystemDate  Systemdate in days since 1970-01-01 (UTC)
  * \param SystemTime  System time seconds since midnight (UTC)
  * \param TimeSource  Source of the Systemtime
@@ -329,11 +332,10 @@ inline bool ParseN2kAISSafetyRelatedBroadcastMsg(const tN2kMsg &N2kMsg, uint8_t 
 
  * \param N2kMsg                Reference to a N2kMsg Object, 
  *                              Output: NMEA2000 message ready to be send.
- * \param SID                   Sequence ID. If your device is e.g. boat
- *                              speed and heading at same time, you can set
- *                              same SID for different messages to link this 
- *                              PGN to other related PGNs. When no linkage
- *                              exists, the value of the SID shall be set to 255
+ * \param SID                   Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                              \n
+ *                              The sequence identifier field is used to tie different PGNs data together to same 
+ *                              sampling or calculation time.
  * \param MobEmitterId          Identifier for each MOB emitter, unique to
  *                              the vessel
  * \param MOBStatus             MOB Status
@@ -403,11 +405,7 @@ inline void SetN2kMOBNotification(tN2kMsg &N2kMsg,
  * activation, and MOB device battery status.
  * 
  * \param N2kMsg                Reference to a N2kMsg Object, 
- * \param SID                   Sequence ID. If your device is e.g. boat
- *                              speed and heading at same time, you can set
- *                              same SID for different messages to link this
- *                              PGN to other related PGNs. When no linkage
- *                              exists, the value of the SID shall be set to 255
+ * \param SID                   Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param MobEmitterId          Identifier for each MOB emitter, unique to
  *                              the vessel
  * \param MOBStatus             MOB Status
@@ -721,11 +719,10 @@ inline bool ParseN2kRudder(const tN2kMsg &N2kMsg, double &RudderPosition) {
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat
- *                    speed and heading at same time, you can set
- *                    same SID for different messages to link this PGN to
- *                    other related PGNs. When no linkage exists, the value of
- *                    the SID shall be set to 255
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param Heading     Heading in radians
  * \param Deviation   Magnetic deviation in radians. Use N2kDoubleNA
  *                    for undefined value.
@@ -768,11 +765,7 @@ inline void SetN2kMagneticHeading(tN2kMsg &N2kMsg, unsigned char SID, double Hea
  * produce a True heading.
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat
- *                    speed and heading at same time, you can set
- *                    same SID for different messages to link this PGN to other
- *                    related PGNs. When no linkage exists, the value of the
- *                    SID shall be set to 255
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param Heading     Heading in radians
  * \param Deviation   Magnetic deviation in radians. Use N2kDoubleNA
  *                    for undefined value.
@@ -807,11 +800,10 @@ inline bool ParseN2kHeading(const tN2kMsg &N2kMsg, unsigned char &SID, double &H
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat
- *                    speed and heading at same time, you can set
- *                    same SID for different messages to link this PGN to other
- *                    related PGNs. When no linkage exists, the value of the
- *                    SID shall be set to 255
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param RateOfTurn  Change in heading in radians per second
  * 
  */
@@ -835,11 +827,7 @@ inline void SetN2kRateOfTurn(tN2kMsg &N2kMsg, unsigned char SID, double RateOfTu
  * Rate of Turn is the rate of change of the Heading.
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat
- *                    speed and heading at same time, you can set
- *                    same SID for different messages to link this PGN to other
- *                    related PGNs. When no linkage exists, the value of the
- *                    SID shall be set to 255
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param RateOfTurn  Change in heading in radians per second
  * 
  * \return true     Parsing of PGN Message successful
@@ -868,11 +856,10 @@ inline bool ParseN2kRateOfTurn(const tN2kMsg &N2kMsg, unsigned char &SID, double
  * the earth’s surface.
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat
- *                    speed and heading at same time, you can set
- *                    same SID for different messages to link this PGN to other
- *                    related PGNs. When no linkage exists, the value of the
- *                    SID shall be set to 255
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param Heave       Vertical displacement perpendicular to the earth’s
  *                    surface in meters
  * \param Delay       Delay added by calculations in seconds
@@ -901,11 +888,7 @@ inline void SetN2kHeave(tN2kMsg &N2kMsg, unsigned char SID, double Heave,
  * the earth’s surface.
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat
- *                    speed and heading at same time, you can set
- *                    same SID for different messages to link this PGN to other
- *                    related PGNs. When no linkage exists, the value of the
- *                    SID shall be set to 255
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param Heave       Vertical displacement perpendicular to the earth’s
  *                    surface in meters
  * \param Delay       Delay added by calculations in seconds
@@ -953,9 +936,10 @@ inline bool ParseN2kHeave(const tN2kMsg &N2kMsg, unsigned char &SID, double &Hea
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat
- *                    speed and heading at same time, you can set
- *                    same SID for different messages to link this PGN to other related PGNs. When no linkage exists, the value of the SID shall be set to 255
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param Yaw         Heading in radians.
  * \param Pitch       Pitch in radians. Positive, when your bow rises.
  * \param Roll        Roll in radians. Positive, when tilted right.
@@ -984,9 +968,7 @@ inline void SetN2kAttitude(tN2kMsg &N2kMsg, unsigned char SID, double Yaw, doubl
  * control and onboard platform stabilization.
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat
- *                    speed and heading at same time, you can set
- *                    same SID for different messages to link this PGN to other related PGNs. When no linkage exists, the value of the SID shall be set to 255
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param Yaw         Heading in radians.
  * \param Pitch       Pitch in radians. Positive, when your bow rises.
  * \param Roll        Roll in radians. Positive, when tilted right.
@@ -1021,11 +1003,10 @@ inline bool ParseN2kAttitude(const tN2kMsg &N2kMsg, unsigned char &SID, double &
  * 
  * \param N2kMsg          Reference to a N2kMsg Object, 
  *                        Output: NMEA2000 message ready to be send.
- * \param SID             Sequence ID. If your device is e.g. boat
- *                        speed and heading at same time, you can set
- *                        same SID for different messages to link this PGN to
- *                        other related PGNs. When no linkage exists, the value
- *                        of the SID shall be set to 255
+ * \param SID             Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                        \n
+ *                        The sequence identifier field is used to tie different PGNs data together to same 
+ *                        sampling or calculation time.
  * \param Source          How was the variation value generated
  * \param DaysSince1970   Days since January 1, 1970
  * \param Variation       Magnetic variation/declination in radians
@@ -1055,11 +1036,7 @@ inline void SetN2kMagneticVariation(tN2kMsg &N2kMsg, unsigned char SID, tN2kMagn
  * transmissions exist.
  * 
  * \param N2kMsg          Reference to a N2kMsg Object, 
- * \param SID             Sequence ID. If your device is e.g. boat
- *                        speed and heading at same time, you can set
- *                        same SID for different messages to link this PGN to
- *                        other related PGNs. When no linkage exists, the value
- *                        of the SID shall be set to 255
+ * \param SID             Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param Source          How was the variation value generated
  * \param DaysSince1970   Days since January 1, 1970
  * \param Variation       Magnetic variation/declination in radians
@@ -1961,13 +1938,12 @@ inline bool ParseN2kFluidLevel(const tN2kMsg &N2kMsg, unsigned char &Instance, t
  * instance field. Used primarily by display or instrumentation devices, but
  * may also be used by battery management controls.
  *
- * \param N2kMsg       Reference to a N2kMsg Object, 
- *                     Output: NMEA2000 message ready to be send.
- * \param SID             Sequence ID. If your device is e.g. boat speed and
- *                        heading at same time, you can set same SID for
- *                        different messages to link this PGN to other related
- *                        PGNs. When no linkage exists, the value of the SID
- *                        shall be set to 255
+ * \param N2kMsg          Reference to a N2kMsg Object, 
+ *                        Output: NMEA2000 message ready to be send.
+ * \param SID             Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                        \n
+ *                        The sequence identifier field is used to tie different PGNs data together to same 
+ *                        sampling or calculation time.
  * \param DCInstance      DC instance
  * \param DCType          Defines type of DC source. See definition of 
  *                        \ref tN2kDCType
@@ -2002,11 +1978,7 @@ inline void SetN2kDCStatus(tN2kMsg &N2kMsg, unsigned char SID, unsigned char DCI
  * may also be used by battery management controls.
  *
  * \param N2kMsg       Reference to a N2kMsg Object, 
- * \param SID             Sequence ID. If your device is e.g. boat speed and
- *                        heading at same time, you can set same SID for
- *                        different messages to link this PGN to other related
- *                        PGNs. When no linkage exists, the value of the SID
- *                        shall be set to 255
+ * \param SID             Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param DCInstance      DC instance
  * \param DCType          Defines type of DC source. See definition of 
  *                        \ref tN2kDCType
@@ -2064,7 +2036,7 @@ void SetN2kPGN127507(tN2kMsg &N2kMsg, unsigned char Instance, unsigned char Batt
  * 
  * Alias of PGN 127507. This alias was introduced to improve the readability
  * of the source code. See parameter details on \ref SetN2kPGN127507
-  */
+ */
 inline void SetN2kChargerStatus(tN2kMsg &N2kMsg, unsigned char Instance, unsigned char BatteryInstance,
                      tN2kChargeState ChargeState, tN2kChargerMode ChargerMode=N2kCM_Standalone,
                      tN2kOnOff Enabled=N2kOnOff_On, tN2kOnOff EqualizationPending=N2kOnOff_Unavailable, double EqualizationTimeRemaining=N2kDoubleNA) {
@@ -2126,14 +2098,13 @@ inline bool ParseN2kChargerStatus(const tN2kMsg &N2kMsg, unsigned char &Instance
  * \param BatteryCurrent      Current in A
  * \param BatteryTemperature  Battery temperature in K. Use function
  *                            CToKelvin, if you want to use °C.
- * \param SID      Sequence ID. If your device is e.g. boat speed and
- *                 heading at same time, you can set same SID for
- *                 different messages to link this PGN to other related
- *                 PGNs. When no linkage exists, the value of the SID
- *                 shall be set to 255
+ * \param SID                 Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                            \n
+ *                            The sequence identifier field is used to tie different PGNs data together to same 
+ *                            sampling or calculation time.
  */
 void SetN2kPGN127508(tN2kMsg &N2kMsg, unsigned char BatteryInstance, double BatteryVoltage, double BatteryCurrent=N2kDoubleNA,
-                     double BatteryTemperature=N2kDoubleNA, unsigned char SID=1);
+                     double BatteryTemperature=N2kDoubleNA, unsigned char SID=0xff);
 
 /************************************************************************//**
  * \brief Setting up Message "Battery Status" - PGN 127508
@@ -2163,11 +2134,7 @@ inline void SetN2kDCBatStatus(tN2kMsg &N2kMsg, unsigned char BatteryInstance, do
  * \param BatteryCurrent      Current in A
  * \param BatteryTemperature  Battery temperature in K. Use function
  *                            CToKelvin, if you want to use °C.
- * \param SID     Sequence ID. If your device is e.g. boat speed and
- *                heading at same time, you can set same SID for
- *                different messages to link this PGN to other related
- *                PGNs. When no linkage exists, the value of the SID
- *                shall be set to 255
+ * \param SID                 Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * 
  * \return true     Parsing of PGN Message successful
  * \return false    Parsing of PGN Message aborted
@@ -2190,13 +2157,89 @@ inline bool ParseN2kDCBatStatus(const tN2kMsg &N2kMsg, unsigned char &BatteryIns
 }
 
 /************************************************************************//**
+ * \brief Settingup PGN 127510 Message "Charger Configuration Status
+ * \ingroup group_msgSetUp
+ *
+ * \param N2kMsg              Reference to a N2kMsg Object,
+ *                            Output: NMEA2000 message ready to be send.
+ * \param ChargerInsance              ChargerIntance
+ * \param BatteryInstance             BatteryInstance
+ * \param Charger Enable/Disable      \ref tN2kOnOff
+ * \param ChargeCurrentLimit          CurrentLimit in % range 0-252 resolution 1%
+ * \param CharginAlgorithm            \ref tN2kChargingAlgorithm
+ * \param ChargerMode                 \ref tN2kChargerMode
+ * \param BatteryTemperature          Battery temp when no seonsor
+ * \param Equalization Enable/Disable \ref N2kOnOff.  Equalize one time enable/disable
+ * \param OverChargeEnable            \ref N2kOnOff.  Enable/Disable over charge
+ * \param EqualizationTimeRemaining   seconds
+ */
+void SetN2kPGN127510(tN2kMsg &N2kMsg, unsigned char ChargerInsance, unsigned char BatteryInstance, tN2kOnOff Enable=N2kOnOff_On,
+                     unsigned char ChargeCurrentLimit=N2kUInt8NA, tN2kChargingAlgorithm ChargingAlgorithm=N2kCA_3State, tN2kChargerMode ChargerMode=N2kCM_Standalone,
+		     tBattTempNoSensor BatteryTemperature=N2kBT_NotAvailable, tN2kOnOff EqualizationEnabled=N2kOnOff_Off,
+		     tN2kOnOff OverChargeEnable=N2kOnOff_Off, uint16_t  EqualizationTimeRemaining=0);
+
+/************************************************************************//**
+ * \brief Setting up Message "Charger Configurationn Status" - PGN 127510
+ * \ingroup group_msgSetUp
+ *
+ * Alias of PGN 127510. This alias was introduced to improve the readability
+ * of the source code. See parameter details on \ref SetN2kPGN127510
+ */
+inline void SetN2kChargerConf(tN2kMsg &N2kMsg, unsigned char ChargerInsance, unsigned char BatteryInstance, tN2kOnOff Enable=N2kOnOff_On,
+			      unsigned char ChargeCurrentLimit=N2kUInt8NA, tN2kChargingAlgorithm ChargingAlgorithm=N2kCA_3State, tN2kChargerMode ChargerMode=N2kCM_Standalone,
+			      tBattTempNoSensor BatteryTemperature=N2kBT_NotAvailable,
+			      tN2kOnOff EqualizationEnabled=N2kOnOff_Off, tN2kOnOff OverChargeEnable=N2kOnOff_Off, uint16_t EqualizationTimeRemaining=0) {
+   SetN2kPGN127510(N2kMsg,ChargerInsance,BatteryInstance,Enable,ChargeCurrentLimit,ChargingAlgorithm,ChargerMode,BatteryTemperature,
+                     EqualizationEnabled,OverChargeEnable,EqualizationTimeRemaining);
+}
+
+/************************************************************************//**
+ * \brief Parsing the content of message PGN 127510  "Charger Configuation  Status"
+ * \ingroup group_msgParsers
+ *
+ * Any device capable of charing a battery can transmit this
+ *
+ * \param N2kMsg       Reference to a N2kMsg Object,
+ *                     Output: NMEA2000 message ready to be send.
+ *
+ * \param ChargerInsance              ChargerIntance
+ * \param BatteryInstance             BatteryInstance
+ * \param Charger Enable/Disable      \ref tN2kOnOff
+ * \param ChargeCurrentLimit          CurrentLimit in % range 0-252 resolution 1%
+ * \param CharginAlgorithm            \ref tN2kChargingAlgorithm
+ * \param ChargerMode                 \ref tN2kChargerMode
+ * \param BatteryTemperature          Battery temp when no seonsor
+ * \param Equalization Enable/Disable \ref N2kOnOff.  Equalize one time enable/disable
+ * \param OverChargeEnable            \ref N2kOnOff.  Enable/Disable over charge
+ * \param EqualizationTimeRemaining   seconds
+ *
+ * \return true     Parsing of PGN Message successful
+ * \return false    Parsing of PGN Message aborted
+ */
+bool ParseN2kPGN127510(const tN2kMsg &N2kMsg, unsigned char &ChargerInsance, unsigned char &BatteryInstance, tN2kOnOff &Enable,
+                     unsigned char &ChargeCurrentLimit, tN2kChargingAlgorithm  &ChargingAlgorithm, tN2kChargerMode &ChargerMode, tBattTempNoSensor &BatteryTemperature,
+                                tN2kOnOff &EqualizationEnabled, tN2kOnOff &OverChargeEnable, uint16_t &EqualizationTimeRemaining);
+
+/************************************************************************//**
+ * \brief Setting up Message "Charger Configurationn Status" - PGN 127510
+ * \ingroup group_msgParsers
+ *
+ * Alias of PGN 127510. This alias was introduced to improve the readability
+ * of the source code. See parameter details on \ref ParseN2kPGN127510
+ */
+inline bool ParseN2kChargerConf(const tN2kMsg &N2kMsg, unsigned char &ChargerInsance, unsigned char &BatteryInstance, tN2kOnOff &Enable,
+                     unsigned char &ChargeCurrentLimit, tN2kChargingAlgorithm &ChargingAlgorithm, tN2kChargerMode &ChargerMode, tBattTempNoSensor &BatteryTemperature,
+                                tN2kOnOff &EqualizationEnabled, tN2kOnOff &OverChargeEnable, uint16_t &EqualizationTimeRemaining) {
+        return ParseN2kPGN127510(N2kMsg,ChargerInsance,BatteryInstance,Enable,ChargeCurrentLimit,ChargingAlgorithm,ChargerMode,BatteryTemperature,
+                     EqualizationEnabled,OverChargeEnable,EqualizationTimeRemaining);
+}
+
+
+/************************************************************************//**
  * \brief Setting up PGN 127513 Message "Battery Configuration Status"
  * \ingroup group_msgSetUp
  * 
  * Any device connected to a battery may transmit this message.
- * \warning This has not yet confirmed to be right. Specially Peukert
- * Exponent can have in this configuration values from 1 to 1.504.
- * And I expect on code that I have to send value PeukertExponent-1 to the bus.
  * 
  * \param N2kMsg       Reference to a N2kMsg Object, 
  *                     Output: NMEA2000 message ready to be send.
@@ -2222,7 +2265,7 @@ void SetN2kPGN127513(tN2kMsg &N2kMsg, unsigned char BatInstance, tN2kBatType Bat
  * 
  * Alias of PGN 127513. This alias was introduced to improve the readability
  * of the source code. See parameter details on \ref SetN2kPGN127513
-  */
+ */
 inline void SetN2kBatConf(tN2kMsg &N2kMsg, unsigned char BatInstance, tN2kBatType BatType, tN2kBatEqSupport SupportsEqual,
                      tN2kBatNomVolt BatNominalVoltage, tN2kBatChem BatChemistry, double BatCapacity, int8_t BatTemperatureCoefficient,
 				double PeukertExponent, int8_t ChargeEfficiencyFactor) {
@@ -2235,9 +2278,6 @@ inline void SetN2kBatConf(tN2kMsg &N2kMsg, unsigned char BatInstance, tN2kBatTyp
  * \ingroup group_msgParsers
  * 
  * Any device connected to a battery may transmit this message.
- * \warning This has not yet confirmed to be right. Specially Peukert
- * Exponent can have in this configuration values from 1 to 1.504.
- * And I expect on code that I have to send value PeukertExponent-1 to the bus.
  * 
  * \param N2kMsg       Reference to a N2kMsg Object, 
  *                     Output: NMEA2000 message ready to be send.
@@ -2251,7 +2291,7 @@ inline void SetN2kBatConf(tN2kMsg &N2kMsg, unsigned char BatInstance, tN2kBatTyp
  * \param BatTemperatureCoefficient Battery temperature coefficient in %
  * \param PeukertExponent      Peukert Exponent
  * \param ChargeEfficiencyFactor      Charge efficiency factor
- * 
+ *
  * \return true     Parsing of PGN Message successful
  * \return false    Parsing of PGN Message aborted
  *
@@ -2273,6 +2313,72 @@ inline bool ParseN2kBatConf(const tN2kMsg &N2kMsg, unsigned char &BatInstance, t
 				double &PeukertExponent, int8_t &ChargeEfficiencyFactor) {
 	return ParseN2kPGN127513(N2kMsg,BatInstance,BatType,SupportsEqual,BatNominalVoltage,BatChemistry,BatCapacity,BatTemperatureCoefficient,
 				PeukertExponent,ChargeEfficiencyFactor);
+}
+
+/*****************************************************************************//**
+ * \brief Converter (Inverter/Charger) Status
+ *          message PGN 127750
+ * \ingroup group_msgSetUp
+ *
+ *  Replaces PGN 127507
+ *
+ *  Provides state and status information about charger/inverters
+ *
+ * \param N2kMsg       Reference to a N2kMsg Object,
+ *                     Output: NMEA2000 message ready to be send.
+ * \param SID                   Sequence ID
+ * \param ConnectionNumber      Connection number
+ * \param OperatingState        \ref tN2kConvMode
+ * \param TemperatureState      \ref TemperatureState
+ * \param OverloadState         \ref tN2kOverloadState
+ * \param LowDCVoltageState     \ref tN2kDCVolgateState
+ * \param RippleState           \ref tN2kRippleState
+ */
+void SetN2kPGN127750(tN2kMsg &N2kMsg, unsigned char SID, unsigned char ConnectionNumber, tN2kConvMode OperatingState,
+                                  tN2kTemperatureState TemperatureState, tN2kOverloadState OverloadState, tN2kDCVolgateState LowDcVoltageState, tN2kRippleState RippleState);
+/*****************************************************************************//**
+ * \brief Converter (Inverter/Charger) Status
+ *          message PGN 127750
+ * \ingroup group_msgSetUp
+ *
+ * alias of PGN 127750. This alias was introduced to imporve the reliabilty
+ * of the source code. Seee parameter details on \ref SetN2kPGN127750
+ */
+inline void SetN2kDCConvStatus(tN2kMsg &N2kMsg, unsigned char SID, unsigned char ConnectionNumber, tN2kConvMode OperatingState,
+                                  tN2kTemperatureState TemperatureState, tN2kOverloadState OverloadState, tN2kDCVolgateState LowDcVoltageState, tN2kRippleState RippleState) {
+ SetN2kPGN127750(N2kMsg, SID, ConnectionNumber,OperatingState,TemperatureState,OverloadState,LowDcVoltageState,RippleState);
+}
+
+/************************************************************************//**
+ * \brief Parsing the content of message PGN 127750 Converter (Inverter/Charger) Status
+ * \ingroup group_msgParsers
+ *
+ * \param N2kMsg       Reference to a N2kMsg Object,
+ *                     Output: NMEA2000 message ready to be send.
+ * \param SID                   Sequence ID
+ * \param ConnectionNumber      Connection number
+ * \param OperatingState        \ref tN2kConvMode
+ * \param TemperatureState      \ref TemperatureState
+ * \param OverloadState         \ref tN2kOverloadState
+ * \param LowDCVoltageState     \ref tN2kDCVolgateState
+ * \param RippleState           \ref tN2kRippleState
+ *
+ * \return true     Parsing of PGN Message successful
+ * \return false    Parsing of PGN Message aborted
+ */
+bool ParseN2kPGN127750(const tN2kMsg &N2kMsg, unsigned char &SID, unsigned char &ConnectionNumber, tN2kConvMode &OperatingState,
+                                  tN2kTemperatureState &TemperatureState, tN2kOverloadState &OverloadState, tN2kDCVolgateState &LowDcVoltageState, tN2kRippleState &RippleState);
+
+/************************************************************************//**
+ * \brief Parsing the content of message PGN 127513 Converter (Inverter/Charger) Status
+ * \ingroup group_msgParsers
+ *
+ * aliaso of PGN 127750.  This alias was intruduced to improve the readability
+ * of the source code. See parameter details in \ref ParseN2kPGN127750
+ */
+inline bool ParseN2kDCConvStatus(const tN2kMsg &N2kMsg, unsigned char &SID, unsigned char &ConnectionNumber, tN2kConvMode &OperatingState,
+                                  tN2kTemperatureState &TemperatureState, tN2kOverloadState &OverloadState, tN2kDCVolgateState &LowDcVoltageState, tN2kRippleState &RippleState) {
+ return ParseN2kPGN127750(N2kMsg,SID,ConnectionNumber,OperatingState,TemperatureState,OverloadState,LowDcVoltageState,RippleState);
 }
 
 /************************************************************************//**
@@ -2300,16 +2406,15 @@ inline bool ParseN2kBatConf(const tN2kMsg &N2kMsg, unsigned char &BatInstance, t
  * the value of the SID shall be set to 255
  * 
  * [NMEA2000 document](https://web.archive.org/web/20170609074636/https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf)
- * \param N2kMsg    Reference to a N2kMsg Object, 
- *                  Output: NMEA2000 message ready to be send.
- * \param SID       Sequence ID. If your device is e.g. boat speed and
- *                  heading at same time, you can set same SID for
- *                  different messages to link this PGN to other related PGNs.
- *                  When no linkage exists, the value of the SID shall be
- *                  set to 255
- * \param Leeway    Positive angles indicate slippage to starboard, that
- *                  is, the vessel is tracking to the right of its heading,
- *                  and negative angles indicate slippage to port
+ * \param N2kMsg      Reference to a N2kMsg Object, 
+ *                    Output: NMEA2000 message ready to be send.
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
+ * \param Leeway      Positive angles indicate slippage to starboard, that
+ *                    is, the vessel is tracking to the right of its heading,
+ *                    and negative angles indicate slippage to port
  */
 void SetN2kPGN128000(tN2kMsg &N2kMsg, unsigned char SID, double Leeway);
 
@@ -2351,11 +2456,7 @@ inline void SetN2kLeeway(tN2kMsg &N2kMsg, unsigned char SID, double Leeway) {
  * [NMEA2000 document](https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf)
  * \param N2kMsg    Reference to a N2kMsg Object, 
  *                  Output: NMEA2000 message ready to be send.
- * \param SID       Sequence ID. If your device is e.g. boat speed and
- *                  heading at same time, you can set same SID for
- *                  different messages to link this PGN to other related PGNs.
- *                  When no linkage exists, the value of the SID shall be
- *                  set to 255
+ * \param SID       Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param Leeway    Positive angles indicate slippage to starboard, that
  *                  is, the vessel is tracking to the right of its heading,
  *                  and negative angles indicate slippage to port
@@ -2385,15 +2486,15 @@ inline bool ParseN2kLeeway(const tN2kMsg &N2kMsg, unsigned char &SID, double &Le
  * This parameter group provides a single transmission that describes the
  * motion of a vessel.
  * 
- * \param N2kMsg    Reference to a N2kMsg Object, 
- *                  Output: NMEA2000 message ready to be send.
- * \param SID       Sequence ID. If your device is e.g. boat speed and heading 
- *                  at same time, you can set same SID for different messages
- *                  to link this PGN to other related PGNs. When no linkage
- *                  exists, the value of the SID shall be set to 255
+ * \param N2kMsg      Reference to a N2kMsg Object, 
+ *                    Output: NMEA2000 message ready to be send.
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param WaterReferenced   Speed over water in m/s
  * \param GroundReferenced  Speed over Ground in m/s
- * \param SWRT      Type of transducer. See \ref tN2kSpeedWaterReferenceType
+ * \param SWRT        Type of transducer. See \ref tN2kSpeedWaterReferenceType
  * 
  * \todo  There is an additional 4bit field "speed direction" in this PGN
  *         this could be added for the future.
@@ -2421,10 +2522,7 @@ inline void SetN2kBoatSpeed(tN2kMsg &N2kMsg, unsigned char SID, double WaterRefe
  * 
  * \param N2kMsg    Reference to a N2kMsg Object, 
  *                  Output: NMEA2000 message ready to be send.
- * \param SID       Sequence ID. If your device is e.g. boat speed and heading 
- *                  at same time, you can set same SID for different messages
- *                  to link this PGN to other related PGNs. When no linkage
- *                  exists, the value of the SID shall be set to 255
+ * \param SID       Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param WaterReferenced   Speed over water in m/s
  * \param GroundReferenced  Speed over Ground in m/s
  * \param SWRT      Type of transducer. See \ref tN2kSpeedWaterReferenceType
@@ -2457,11 +2555,10 @@ inline bool ParseN2kBoatSpeed(const tN2kMsg &N2kMsg, unsigned char &SID, double 
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param DepthBelowTransducer  Water depth below transducer in meters
  * \param Offset      Distance in meters between transducer and water surface
  *                    (positive) or transducer and keel (negative)
@@ -2491,11 +2588,7 @@ inline void SetN2kWaterDepth(tN2kMsg &N2kMsg, unsigned char SID, double DepthBel
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param DepthBelowTransducer  Water depth below transducer in meters
  * \param Offset      Distance in meters between transducer and water surface
  *                    (positive) or transducer and keel (negative)
@@ -2622,11 +2715,10 @@ inline bool ParseN2kDistanceLog(const tN2kMsg &N2kMsg, uint16_t &DaysSince1970, 
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param WindlassIdentifier          Unique Identifier of a function within a 
  *                                    Virtual Device: 0 - 255
  * \param WindlassDirectionControl    see \ref tN2kWindlassDirectionControl
@@ -2686,11 +2778,7 @@ void SetN2kPGN128776(
  * \sa <https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf>
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param WindlassIdentifier          Unique Identifier of a function within a 
  *                                    Virtual Device: 0 - 255
  * \param WindlassDirectionControl    see \ref tN2kWindlassDirectionControl
@@ -2754,11 +2842,10 @@ bool ParseN2kPGN128776(
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param WindlassIdentifier      Unique Identifier of a function within a 
  *                                Virtual Device: 0 - 255
  * \param RodeCounterValue        amount of rode deployed in meters
@@ -2811,11 +2898,7 @@ void SetN2kPGN128777(
  * PGNs.
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param WindlassIdentifier      Unique Identifier of a function within a 
  *                                Virtual Device: 0 - 255
  * \param RodeCounterValue        amount of rode deployed in meters
@@ -2871,11 +2954,10 @@ bool ParseN2kPGN128777(
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param WindlassIdentifier      Unique Identifier of a function within a 
  *                                Virtual Device: 0 - 255
  * \param TotalMotorTime          Total time windlass has operated since last 
@@ -2924,11 +3006,7 @@ void SetN2kPGN128778(
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param WindlassIdentifier      Unique Identifier of a function within a 
  *                                Virtual Device: 0 - 255
  * \param TotalMotorTime          Total time windlass has operated since last 
@@ -3031,11 +3109,10 @@ inline bool ParseN2kPositionRapid(const tN2kMsg &N2kMsg, double &Latitude, doubl
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param ref         COG reference, see \ref tN2kHeadingReference
  * \param COG         Course Over Ground in radians
  * \param SOG         Speed Over Ground in m/s
@@ -3062,11 +3139,7 @@ inline void SetN2kCOGSOGRapid(tN2kMsg &N2kMsg, unsigned char SID, tN2kHeadingRef
  * Over Ground (COG) and Speed Over Ground (SOG).
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param ref         COG reference, see \ref tN2kHeadingReference
  * \param COG         Course Over Ground in radians
  * \param SOG         Speed Over Ground in m/s
@@ -3097,11 +3170,10 @@ inline bool ParseN2kCOGSOGRapid(const tN2kMsg &N2kMsg, unsigned char &SID, tN2kH
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param DaysSince1970         UTC Date in resolution of 1 day (The number of
  *                              days since January 1, 1970).
  * \param SecondsSinceMidnight  UTC time second since midnight
@@ -3162,11 +3234,7 @@ inline void SetN2kGNSS(tN2kMsg &N2kMsg, unsigned char SID, uint16_t DaysSince197
  * respectively, when there are no reference stations present in the message.
  *
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param DaysSince1970         UTC Date in resolution of 1 day (The number of
  *                              days since January 1, 1970).
  * \param SecondsSinceMidnight  UTC time second since midnight
@@ -3328,12 +3396,15 @@ inline bool ParseN2kLocalOffset(const tN2kMsg &N2kMsg, uint16_t &DaysSince1970, 
  * \param Heading     heading
  * \param ROT         Rate of turn
  * \param NavStatus   Navigational status, see \ref tN2kAISNavStatus
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID.
+ *                    The sequence identifier field is used to tie different PGNs data together to same
+ *                    sampling or calculation time.
  * 
  */
 void SetN2kPGN129038(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID, 
-                        double Latitude, double Longitude, bool Accuracy, bool RAIM, 
-                        uint8_t Seconds, double COG, double SOG, tN2kAISTransceiverInformation AISTransceiverInformation, 
-                        double Heading, double ROT, tN2kAISNavStatus NavStatus);
+                        double Latitude, double Longitude, bool Accuracy, bool RAIM,
+                        uint8_t Seconds, double COG, double SOG, tN2kAISTransceiverInformation AISTransceiverInformation,
+		     double Heading, double ROT, tN2kAISNavStatus NavStatus, uint8_t SID=0xff);
 /************************************************************************//**
  * \brief Setting up Message "AIS position reports for Class A" - PGN 129038
  * \ingroup group_msgSetUp
@@ -3342,11 +3413,11 @@ void SetN2kPGN129038(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, u
  * of the source code. See parameter details on \ref SetN2kPGN129038
   */
 inline void SetN2kAISClassAPosition(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID, 
-                        double Latitude, double Longitude, bool Accuracy, bool RAIM, 
-                        uint8_t Seconds, double COG, double SOG, tN2kAISTransceiverInformation AISTransceiverInformation,  
-                        double Heading, double ROT, tN2kAISNavStatus NavStatus) {
-  SetN2kPGN129038(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude, 
-                  Accuracy, RAIM, Seconds, COG, SOG, AISTransceiverInformation, Heading, ROT, NavStatus);
+				    double Latitude, double Longitude, bool Accuracy, bool RAIM,
+				    uint8_t Seconds, double COG, double SOG, tN2kAISTransceiverInformation AISTransceiverInformation,
+				    double Heading, double ROT, tN2kAISNavStatus NavStatus, uint8_t SID=0xff) {
+  SetN2kPGN129038(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude,
+                  Accuracy, RAIM, Seconds, COG, SOG, AISTransceiverInformation, Heading, ROT, NavStatus, SID);
 }
 
 /************************************************************************//**
@@ -3391,25 +3462,49 @@ inline void SetN2kAISClassAPosition(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISR
  * \param Heading     heading
  * \param ROT         Rate of turn
  * \param NavStatus   Navigational status, see \ref tN2kAISNavStatus
+ * \param AISTransceiverInformation    AIS transeiver info, see \ref tN2kAISTransceiverInformation
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID.
+ *                    The sequence identifier field is used to tie different PGNs data together to same
+ *                    sampling or calculation time.
  * 
  * \return true     Parsing of PGN Message successful
  * \return false    Parsing of PGN Message aborted
  * 
  */
 bool ParseN2kPGN129038(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID, double &Latitude, double &Longitude,
-                        bool &Accuracy, bool &RAIM, uint8_t &Seconds, double &COG, double &SOG, double &Heading, double &ROT, tN2kAISNavStatus &NavStatus);
+		       bool &Accuracy, bool &RAIM, uint8_t &Seconds, double &COG, double &SOG, double &Heading, double &ROT, tN2kAISNavStatus &NavStatus,
+		       tN2kAISTransceiverInformation &AISTransceiverInformation, uint8_t &SID);
 
 /************************************************************************//**
- * \brief Parsing the content of a "AIS position reports for Class A" 
+ * \brief Parsing the content of a "AIS position reports for Class A"
  *        message - PGN 129038
  * \ingroup group_msgParsers
- * 
+ *
+ * Alias of PGN 129038. This alias was introduced to improve the readability
+ * of the source code. See parameter details on \ref ParseN2kPGN129038
+ */
+inline bool ParseN2kAISClassAPosition(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID, double &Latitude, double &Longitude,
+				      bool &Accuracy, bool &RAIM, uint8_t &Seconds, double &COG, double &SOG, double &Heading, double &ROT, tN2kAISNavStatus & NavStatus,
+				      tN2kAISTransceiverInformation &AISTransceiverInformation, uint8_t &SID) {
+  return ParseN2kPGN129038(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude, Accuracy, RAIM, Seconds, COG, SOG, Heading, ROT, NavStatus, AISTransceiverInformation, SID);
+}
+
+/************************************************************************//**
+ * \brief Parsing the content of a "AIS position reports for Class A"
+ *        message - PGN 129038
+ * \ingroup group_msgParsers
+ *
+ * \note Previous inline version for backwards compatibility, using temporary
+ * value to parse unused parameter
+ *
  * Alias of PGN 129038. This alias was introduced to improve the readability
  * of the source code. See parameter details on \ref ParseN2kPGN129038 
  */
 inline bool ParseN2kAISClassAPosition(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID, double &Latitude, double &Longitude,
-                        bool &Accuracy, bool &RAIM, uint8_t &Seconds, double &COG, double &SOG, double &Heading, double &ROT, tN2kAISNavStatus & NavStatus) {
-  return ParseN2kPGN129038(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude, Accuracy, RAIM, Seconds, COG, SOG, Heading, ROT, NavStatus);
+				      bool &Accuracy, bool &RAIM, uint8_t &Seconds, double &COG, double &SOG, double &Heading, double &ROT, tN2kAISNavStatus & NavStatus) {
+  tN2kAISTransceiverInformation AISInfo;
+  uint8_t SID;
+  return ParseN2kPGN129038(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude, Accuracy, RAIM, Seconds, COG, SOG, Heading, ROT, NavStatus, AISInfo, SID);
 }
 
 /************************************************************************//**
@@ -3478,11 +3573,9 @@ inline bool ParseN2kAISClassAPosition(const tN2kMsg &N2kMsg, uint8_t &MessageID,
  *                    - 0 = SOTDMA communication state follows
  *                    - 1 = ITDMA communication state follows
  *                    (always “1” for Class-B “CS”)
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID.
+ *                    The sequence identifier field is used to tie different PGNs data together to same
+ *                    sampling or calculation time.
  * 
  */
 void SetN2kPGN129039(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
@@ -3498,7 +3591,7 @@ void SetN2kPGN129039(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, u
  * 
  * Alias of PGN 129039. This alias was introduced to improve the readability
  * of the source code. See parameter details on \ref SetN2kPGN129039
-  */
+ */
 inline void SetN2kAISClassBPosition(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
                         double Latitude, double Longitude, bool Accuracy, bool RAIM,
                         uint8_t Seconds, double COG, double SOG, tN2kAISTransceiverInformation AISTransceiverInformation,
@@ -3518,13 +3611,13 @@ inline void SetN2kAISClassBPosition(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISR
  * 
  * Alias of PGN 129039. This alias was introduced to improve the readability
  * of the source code. See parameter details on \ref SetN2kPGN129039
-  */
+ */
 inline void SetN2kAISClassBPosition(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
-                        double Latitude, double Longitude, bool Accuracy, bool RAIM,
-                        uint8_t Seconds, double COG, double SOG, double Heading, tN2kAISUnit Unit,
-                        bool Display, bool DSC, bool Band, bool Msg22, tN2kAISMode Mode, bool State) {
+				    double Latitude, double Longitude, bool Accuracy, bool RAIM,
+				    uint8_t Seconds, double COG, double SOG, double Heading, tN2kAISUnit Unit,
+				    bool Display, bool DSC, bool Band, bool Msg22, tN2kAISMode Mode, bool State) {
   SetN2kPGN129039(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude, Accuracy, RAIM, Seconds,
-                    COG, SOG, N2kaischannel_A_VDL_reception, Heading, Unit, Display, DSC, Band, Msg22, Mode, State);
+		  COG, SOG, N2kaischannel_A_VDL_reception, Heading, Unit, Display, DSC, Band, Msg22, Mode, State);
 }
 
 /************************************************************************//**
@@ -3594,39 +3687,63 @@ inline void SetN2kAISClassBPosition(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISR
  *                    - 0 = SOTDMA communication state follows
  *                    - 1 = ITDMA communication state follows
  *                    (always “1” for Class-B “CS”)
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID.
+ *                    The sequence identifier field is used to tie different PGNs data together to same
+ *                    sampling or calculation time.
  * 
  * \return true     Parsing of PGN Message successful
  * \return false    Parsing of PGN Message aborted
  * 
  */
 bool ParseN2kPGN129039(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
-                        double &Latitude, double &Longitude, bool &Accuracy, bool &RAIM, uint8_t &Seconds, double &COG,
-                        double &SOG, tN2kAISTransceiverInformation &AISTransceiverInformation, double &Heading,
-                        tN2kAISUnit &Unit, bool &Display, bool &DSC, bool &Band, bool &Msg22, tN2kAISMode &Mode, bool &State);
+		       double &Latitude, double &Longitude, bool &Accuracy, bool &RAIM, uint8_t &Seconds, double &COG,
+		       double &SOG, tN2kAISTransceiverInformation &AISTransceiverInformation, double &Heading,
+		       tN2kAISUnit &Unit, bool &Display, bool &DSC, bool &Band, bool &Msg22, tN2kAISMode &Mode, bool &State, uint8_t &SID);
 
 /************************************************************************//**
- * \brief Parsing the content of a "AIS position reports for Class B" 
+ * \brief Parsing the content of a "AIS position reports for Class B"
  *        message - PGN 129039
  * \ingroup group_msgParsers
- * 
+ *
  * (Latest inline version)
- * 
+ *
  * Alias of PGN 129039. This alias was introduced to improve the readability
- * of the source code. See parameter details on \ref ParseN2kPGN129039 
+ * of the source code. See parameter details on \ref ParseN2kPGN129039
  */
 inline bool ParseN2kAISClassBPosition(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
-                        double &Latitude, double &Longitude, bool &Accuracy, bool &RAIM,
-                        uint8_t &Seconds, double &COG, double &SOG, tN2kAISTransceiverInformation &AISTransceiverInformation,
-                        double &Heading, tN2kAISUnit &Unit, bool &Display, bool &DSC, bool &Band, bool &Msg22, tN2kAISMode &Mode,
-                        bool &State) {
-  return ParseN2kPGN129039(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude, Accuracy, RAIM, Seconds, COG, SOG, AISTransceiverInformation, Heading, Unit, Display, DSC, Band, Msg22, Mode, State);
+				      double &Latitude, double &Longitude, bool &Accuracy, bool &RAIM,
+				      uint8_t &Seconds, double &COG, double &SOG, tN2kAISTransceiverInformation &AISTransceiverInformation,
+				      double &Heading, tN2kAISUnit &Unit, bool &Display, bool &DSC, bool &Band, bool &Msg22, tN2kAISMode &Mode,
+				      bool &State, uint8_t &SID) {
+  return ParseN2kPGN129039(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude, Accuracy, RAIM, Seconds, COG, SOG, AISTransceiverInformation, Heading, Unit, Display, DSC, Band, Msg22, Mode, State, SID);
 }
 
 /************************************************************************//**
- * \brief Parsing the content of a "AIS position reports for Class B" 
+ * \brief Parsing the content of a "AIS position reports for Class B"
  *        message - PGN 129039
  * \ingroup group_msgParsers
- * 
+ *
+ * \note Previous inline version for backwards compatibility, using temporary
+ * value to parse unused parameter
+ *
+ * Alias of PGN 129039. This alias was introduced to improve the readability
+ * of the source code. See parameter details on \ref ParseN2kPGN129039
+ */
+inline bool ParseN2kAISClassBPosition(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
+				      double &Latitude, double &Longitude, bool &Accuracy, bool &RAIM,
+				      uint8_t &Seconds, double &COG, double &SOG, double &Heading, tN2kAISUnit &Unit,
+				      bool &Display, bool &DSC, bool &Band, bool &Msg22, tN2kAISMode &Mode, bool &State) {
+  tN2kAISTransceiverInformation AISTransceiverInformation; // for backwards compatibility
+  uint8_t SID;
+  return ParseN2kPGN129039(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude, Accuracy,
+			   RAIM, Seconds, COG, SOG, AISTransceiverInformation, Heading, Unit, Display, DSC, Band, Msg22, Mode, State, SID);
+}
+
+/************************************************************************//**
+ * \brief Parsing the content of a "AIS position reports for Class B"
+ *        message - PGN 129039
+ * \ingroup group_msgParsers
+ *
  * \note Previous inline version for backwards compatibility, using temporary
  * value to parse unused parameter
  * 
@@ -3634,12 +3751,12 @@ inline bool ParseN2kAISClassBPosition(const tN2kMsg &N2kMsg, uint8_t &MessageID,
  * of the source code. See parameter details on \ref ParseN2kPGN129039 
  */
 inline bool ParseN2kAISClassBPosition(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
-                        double &Latitude, double &Longitude, bool &Accuracy, bool &RAIM,
-                        uint8_t &Seconds, double &COG, double &SOG, double &Heading, tN2kAISUnit &Unit,
-                        bool &Display, bool &DSC, bool &Band, bool &Msg22, tN2kAISMode &Mode, bool &State) {
-  tN2kAISTransceiverInformation AISTransceiverInformation; // for backwards compatibility
+				      double &Latitude, double &Longitude, bool &Accuracy, bool &RAIM,
+				      uint8_t &Seconds, double &COG, double &SOG, tN2kAISTransceiverInformation &AISTransceiverInformation,
+				      double &Heading, tN2kAISUnit &Unit, bool &Display, bool &DSC, bool &Band, bool &Msg22, tN2kAISMode &Mode, bool &State) {
+  uint8_t SID;   // for backwards compatibility
   return ParseN2kPGN129039(N2kMsg, MessageID, Repeat, UserID, Latitude, Longitude, Accuracy,
-                            RAIM, Seconds, COG, SOG, AISTransceiverInformation, Heading, Unit, Display, DSC, Band, Msg22, Mode, State);
+			   RAIM, Seconds, COG, SOG, AISTransceiverInformation, Heading, Unit, Display, DSC, Band, Msg22, Mode, State, SID);
 }
 
 //*****************************************************************************
@@ -3881,11 +3998,10 @@ inline bool ParseN2kAISAtoNReport(const tN2kMsg &N2kMsg, tN2kAISAtoNReportData &
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param XTEMode     CrossTrackError Mode, see \ref tN2kXTEMode
  * \param NavigationTerminated {bool] Navigation has been terminated
  * \param XTE         CrossTrackError in meter
@@ -3913,11 +4029,7 @@ inline void SetN2kXTE(tN2kMsg &N2kMsg, unsigned char SID, tN2kXTEMode XTEMode, b
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param XTEMode     CrossTrackError Mode, see \ref tN2kXTEMode
  * \param NavigationTerminated {bool] Navigation has been terminated
  * \param XTE         CrossTrackError in meter
@@ -3951,11 +4063,10 @@ inline bool ParseN2kXTE(const tN2kMsg &N2kMsg, unsigned char& SID, tN2kXTEMode& 
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param DistanceToWaypoint          Distance to Destination Waypoint
  * \param BearingReference            Course / Bearing Reference, see \ref 
  *                                    tN2kHeadingReference
@@ -3979,7 +4090,7 @@ inline bool ParseN2kXTE(const tN2kMsg &N2kMsg, unsigned char& SID, tN2kXTEMode& 
 void SetN2kPGN129284(tN2kMsg &N2kMsg, unsigned char SID, double DistanceToWaypoint, tN2kHeadingReference BearingReference,
                       bool PerpendicularCrossed, bool ArrivalCircleEntered, tN2kDistanceCalculationType CalculationType,
                       double ETATime, int16_t ETADate, double BearingOriginToDestinationWaypoint, double BearingPositionToDestinationWaypoint,
-                      uint8_t OriginWaypointNumber, uint8_t DestinationWaypointNumber,
+                      uint32_t OriginWaypointNumber, uint32_t DestinationWaypointNumber,
                       double DestinationLatitude, double DestinationLongitude, double WaypointClosingVelocity);
 
 /************************************************************************//**
@@ -3992,7 +4103,7 @@ void SetN2kPGN129284(tN2kMsg &N2kMsg, unsigned char SID, double DistanceToWaypoi
 inline void SetN2kNavigationInfo(tN2kMsg &N2kMsg, unsigned char SID, double DistanceToWaypoint, tN2kHeadingReference BearingReference,
                       bool PerpendicularCrossed, bool ArrivalCircleEntered, tN2kDistanceCalculationType CalculationType,
                       double ETATime, int16_t ETADate, double BearingOriginToDestinationWaypoint, double BearingPositionToDestinationWaypoint,
-                      uint8_t OriginWaypointNumber, uint8_t DestinationWaypointNumber,
+                      uint32_t OriginWaypointNumber, uint32_t DestinationWaypointNumber,
                       double DestinationLatitude, double DestinationLongitude, double WaypointClosingVelocity) {
   SetN2kPGN129284(N2kMsg, SID, DistanceToWaypoint, BearingReference,
                       PerpendicularCrossed, ArrivalCircleEntered, CalculationType,
@@ -4012,11 +4123,7 @@ inline void SetN2kNavigationInfo(tN2kMsg &N2kMsg, unsigned char SID, double Dist
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param DistanceToWaypoint          Distance to Destination Waypoint
  * \param BearingReference            Course / Bearing Reference, see \ref 
  *                                    tN2kHeadingReference
@@ -4043,7 +4150,7 @@ inline void SetN2kNavigationInfo(tN2kMsg &N2kMsg, unsigned char SID, double Dist
 bool ParseN2kPGN129284(const tN2kMsg &N2kMsg, unsigned char& SID, double& DistanceToWaypoint, tN2kHeadingReference& BearingReference,
                       bool& PerpendicularCrossed, bool& ArrivalCircleEntered, tN2kDistanceCalculationType& CalculationType,
                       double& ETATime, int16_t& ETADate, double& BearingOriginToDestinationWaypoint, double& BearingPositionToDestinationWaypoint,
-                      uint8_t& OriginWaypointNumber, uint8_t& DestinationWaypointNumber,
+                      uint32_t& OriginWaypointNumber, uint32_t& DestinationWaypointNumber,
                       double& DestinationLatitude, double& DestinationLongitude, double& WaypointClosingVelocity);
 
 
@@ -4058,7 +4165,7 @@ bool ParseN2kPGN129284(const tN2kMsg &N2kMsg, unsigned char& SID, double& Distan
 inline bool ParseN2kNavigationInfo(const tN2kMsg &N2kMsg, unsigned char& SID, double& DistanceToWaypoint, tN2kHeadingReference& BearingReference,
                       bool& PerpendicularCrossed, bool& ArrivalCircleEntered, tN2kDistanceCalculationType& CalculationType,
                       double& ETATime, int16_t& ETADate, double& BearingOriginToDestinationWaypoint, double& BearingPositionToDestinationWaypoint,
-                      uint8_t& OriginWaypointNumber, uint8_t& DestinationWaypointNumber,
+                      uint32_t& OriginWaypointNumber, uint32_t& DestinationWaypointNumber,
                       double& DestinationLatitude, double& DestinationLongitude, double& WaypointClosingVelocity) {
    return ParseN2kPGN129284(N2kMsg, SID, DistanceToWaypoint, BearingReference, PerpendicularCrossed, ArrivalCircleEntered, CalculationType,
                             ETATime, ETADate, BearingOriginToDestinationWaypoint, BearingPositionToDestinationWaypoint,
@@ -4111,7 +4218,8 @@ inline void SetN2kPGN129285(tN2kMsg &N2kMsg, uint16_t Start, uint16_t Database, 
                         bool NavDirection, bool SupplementaryData, char* RouteName)
 {
    tN2kNavigationDirection NavDirection1 = NavDirection?N2kdir_reverse:N2kdir_forward;
-	SetN2kPGN129285(N2kMsg, Start, Database, Route, NavDirection1, (uint8_t)SupplementaryData, RouteName);
+   tN2kGenericStatusPair N2kSupplementaryData = SupplementaryData?N2kDD002_Yes:N2kDD002_No;
+	SetN2kPGN129285(N2kMsg, Start, Database, Route, NavDirection1, RouteName, N2kSupplementaryData);
 }                        
 
 /************************************************************************//**
@@ -4155,11 +4263,10 @@ inline bool AppendN2kRouteWPInfo(tN2kMsg &N2kMsg, uint16_t WPID, const char* WPN
  * 
  * \param N2kMsg        Reference to a N2kMsg Object, 
  *                      Output: NMEA2000 message ready to be send.
- * \param SID           Sequence ID. If your device is e.g. boat speed and
- *                      heading at same time, you can set same SID for
- *                      different messages to link this PGN to other related
- *                      PGNs. When no linkage exists, the value of the SID shall
- *                      be set to 255 
+ * \param SID           Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                      \n
+ *                      The sequence identifier field is used to tie different PGNs data together to same 
+ *                      sampling or calculation time.
  * \param DesiredMode   Desired Dilution Of Precision mode,
  *                      see \ref tN2kGNSSDOPmode
  * \param ActualMode    Actual Dilution Of Precision mode.
@@ -4195,11 +4302,7 @@ inline void SetN2kGNSSDOPData(tN2kMsg& N2kMsg, unsigned char SID, tN2kGNSSDOPmod
  * reported, horizontal (HDOP), Vertical (VDOP) and time (TDOP).
  * 
  * \param N2kMsg        Reference to a N2kMsg Object, 
- * \param SID           Sequence ID. If your device is e.g. boat speed and
- *                      heading at same time, you can set same SID for
- *                      different messages to link this PGN to other related
- *                      PGNs. When no linkage exists, the value of the SID shall
- *                      be set to 255 
+ * \param SID           Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param DesiredMode   Desired Dilution Of Precision mode,
  *                      see \ref tN2kGNSSDOPmode
  * \param ActualMode    Actual Dilution Of Precision mode.
@@ -4258,11 +4361,10 @@ struct tSatelliteInfo {
  * 
  * \param N2kMsg        Reference to a N2kMsg Object, 
  *                      Output: NMEA2000 message ready to be send.
- * \param SID           Sequence ID. If your device is e.g. boat speed and
- *                      heading at same time, you can set same SID for
- *                      different messages to link this PGN to other related
- *                      PGNs. When no linkage exists, the value of the SID shall
- *                      be set to 255 
+ * \param SID           Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                      \n
+ *                      The sequence identifier field is used to tie different PGNs data together to same 
+ *                      sampling or calculation time.
  * \param Mode          Range residual mode, see \ref tN2kRangeResidualMode
  * 
  * \sa AppendN2kPGN129540, SetN2kGNSSSatellitesInView
@@ -4320,11 +4422,7 @@ inline bool AppendSatelliteInfo(tN2kMsg& N2kMsg, const tSatelliteInfo& Satellite
  * NumberOfSVs. 
  * 
  * \param N2kMsg        Reference to a N2kMsg Object, 
- * \param SID           Sequence ID. If your device is e.g. boat speed and
- *                      heading at same time, you can set same SID for
- *                      different messages to link this PGN to other related
- *                      PGNs. When no linkage exists, the value of the SID shall
- *                      be set to 255 
+ * \param SID           Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param Mode          Range residual mode, see \ref tN2kRangeResidualMode
  * \param NumberOfSVs   Number of satellite infos in message.
  * 
@@ -4442,12 +4540,13 @@ bool ParseN2kPGN129793(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat 
  * \param IMOnumber       Ship identification number by IMO  
  *                        [1 .. 999999999]; 0 = not available = default  
  *                        Not applicable to SAR aircraft
- * \param Callsign        Call Sign - 7x -> 6 bit ASCII characters,
+ * \param Callsign        Call Sign - Max. 7 chars will be used. Input string will be converted to contain only SixBit ASCII character set (see. ITU-R M.1371-1)
  * \param Name            Name of the vessel; 
- *                        Maximum 20 characters 6 bit ASCII;
+ *                        Maximum 20 characters;
  *                        For SAR aircraft, it should be set
  *                        to “SAR AIRCRAFT NNNNNNN” where NNNNNNN equals
  *                        the aircraft registration number
+ *                        Input string will be converted to contain only SixBit ASCII character set (see. ITU-R M.1371-1)
  * \param VesselType      Vessel Type 
  *                        0 = not available or no ship = default
  *                        1-99 = as defined in § 3.3.2
@@ -4462,7 +4561,8 @@ bool ParseN2kPGN129793(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat 
  * \param ETAtime         EstimatedTimeOfArrival -seconds since midnight (UTC)
  * \param Draught         Maximum present static draught
  * \param Destination     Destination - 
- *                        Maximum 20 characters using 6-bit ASCII  
+ *                        Maximum 20 characters 
+ *                        Input string will be converted to contain only SixBit ASCII character set (see. ITU-R M.1371-1)
  * \param AISversion      AIS version, see \ref tN2kAISVersion
  * \param GNSStype        Type of GNSS, see \ref tN2kGNSStype
  * \param DTE             Data terminal equipment (DTE) ready
@@ -4470,12 +4570,13 @@ bool ParseN2kPGN129793(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat 
  *                        - 1 = not available = default
  * \param AISinfo         AIS Transceiver Information,
  *                        see \ref tN2kAISTransceiverInformation
+ * \param SID             Sequence ID used to bind two PGNs from the same source together. See \ref secRefTermSID.
  */
 void SetN2kPGN129794(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
-                        uint32_t IMOnumber, char *Callsign, char *Name, uint8_t VesselType, double Length,
-                        double Beam, double PosRefStbd, double PosRefBow, uint16_t ETAdate, double ETAtime,
-                        double Draught, char *Destination, tN2kAISVersion AISversion, tN2kGNSStype GNSStype,
-                        tN2kAISDTE DTE, tN2kAISTransceiverInformation AISinfo);
+		     uint32_t IMOnumber, const char *Callsign, const char *Name, uint8_t VesselType, double Length,
+		     double Beam, double PosRefStbd, double PosRefBow, uint16_t ETAdate, double ETAtime,
+		     double Draught, const char *Destination, tN2kAISVersion AISversion, tN2kGNSStype GNSStype,
+		     tN2kAISDTE DTE, tN2kAISTransceiverInformation AISinfo=N2kaischannel_A_VDL_reception, uint8_t SID=0xff);
 
 /************************************************************************//**
  * \brief Setting up Message "AIS static data class A" - PGN 129794
@@ -4485,12 +4586,12 @@ void SetN2kPGN129794(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, u
  * of the source code. See parameter details on \ref SetN2kPGN129794
   */
 inline void SetN2kAISClassAStatic(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
-                        uint32_t IMOnumber, char *Callsign, char *Name, uint8_t VesselType, double Length,
-                        double Beam, double PosRefStbd, double PosRefBow, uint16_t ETAdate, double ETAtime,
-                        double Draught, char *Destination, tN2kAISVersion AISversion, tN2kGNSStype GNSStype,
-                        tN2kAISDTE DTE, tN2kAISTransceiverInformation AISinfo) {
+				  uint32_t IMOnumber, const char *Callsign, const char *Name, uint8_t VesselType, double Length,
+				  double Beam, double PosRefStbd, double PosRefBow, uint16_t ETAdate, double ETAtime,
+				  double Draught, char const *Destination, tN2kAISVersion AISversion, tN2kGNSStype GNSStype,
+				  tN2kAISDTE DTE, tN2kAISTransceiverInformation AISinfo=N2kaischannel_A_VDL_reception, uint8_t SID=0xff) {
   SetN2kPGN129794(N2kMsg, MessageID, Repeat, UserID, IMOnumber, Callsign, Name, VesselType, Length,
-                  Beam, PosRefStbd, PosRefBow, ETAdate, ETAtime, Draught, Destination, AISversion, GNSStype, DTE, AISinfo);
+                  Beam, PosRefStbd, PosRefBow, ETAdate, ETAtime, Draught, Destination, AISversion, GNSStype, DTE, AISinfo, SID);
 }
 
 /************************************************************************//**
@@ -4514,12 +4615,14 @@ inline void SetN2kAISClassAStatic(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRep
  * \param IMOnumber       Ship identification number by IMO
  *                        [1 .. 999999999]; 0 = not available = default  
  *                        Not applicable to SAR aircraft
- * \param Callsign        Call Sign - 7x -> 6 bit ASCII characters,
+ * \param Callsign        Call Sign
+ * \param CallsignBufSize size of Callsign buffer
  * \param Name            Name of the vessel; 
  *                        Maximum 20 characters 6 bit ASCII;
  *                        For SAR aircraft, it should be set
  *                        to “SAR AIRCRAFT NNNNNNN” where NNNNNNN equals
  *                        the aircraft registration number
+ * \param NameBufSize     size of Name buffer
  * \param VesselType      Vessel Type 
  *                        0 = not available or no ship = default
  *                        1-99 = as defined in § 3.3.2
@@ -4535,6 +4638,7 @@ inline void SetN2kAISClassAStatic(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRep
  * \param Draught         Maximum present static draught
  * \param Destination     Destination - 
  *                        Maximum 20 characters using 6-bit ASCII  
+ * \param DestinationBufSize size of Destination buffer
  * \param AISversion      AIS version, see \ref tN2kAISVersion
  * \param GNSStype        Type of GNSS, see \ref tN2kGNSStype
  * \param DTE             Data terminal equipment (DTE) ready
@@ -4542,42 +4646,66 @@ inline void SetN2kAISClassAStatic(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRep
  *                        - 1 = not available = default
  * \param AISinfo         AIS Transceiver Information,
  *                        see \ref tN2kAISTransceiverInformation
- * 
+ * \param SID             Sequence ID used to bind two PGNs from the same source together
+ *
  * \return true     Parsing of PGN Message successful
  * \return false    Parsing of PGN Message aborted
  * 
  */
 bool ParseN2kPGN129794(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
-                        uint32_t &IMOnumber, char *Callsign, char *Name, uint8_t &VesselType, double &Length,
-                        double &Beam, double &PosRefStbd, double &PosRefBow, uint16_t &ETAdate, double &ETAtime,
-                        double &Draught, char *Destination, tN2kAISVersion &AISversion, tN2kGNSStype &GNSStype,
-                        tN2kAISDTE &DTE, tN2kAISTransceiverInformation &AISinfo);
+		       uint32_t &IMOnumber, char *Callsign, size_t CallsignBufSize, char *Name, size_t NameBufSize, uint8_t &VesselType, double &Length,
+		       double &Beam, double &PosRefStbd, double &PosRefBow, uint16_t &ETAdate, double &ETAtime,
+		       double &Draught, char *Destination, size_t DestinationBufSize, tN2kAISVersion &AISversion, tN2kGNSStype &GNSStype,
+		       tN2kAISDTE &DTE, tN2kAISTransceiverInformation &AISinfo, uint8_t &SID);
 
 /************************************************************************//**
- * \brief Parsing the content of a "AIS static data class A" 
+ * \brief Parsing the content of a "AIS static data class A"
  *        message - PGN 129794
  * \ingroup group_msgParsers
- * 
+ *
  * Alias of PGN 129794. This alias was introduced to improve the readability
- * of the source code. See parameter details on \ref ParseN2kPGN129794 
+ * of the source code. See parameter details on \ref ParseN2kPGN129794
  */
 inline bool ParseN2kAISClassAStatic(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
-                        uint32_t & IMOnumber, char *Callsign, char *Name, uint8_t &VesselType, double &Length,
-                        double &Beam, double &PosRefStbd, double &PosRefBow, uint16_t &ETAdate, double &ETAtime,
-                        double &Draught, char *Destination, tN2kAISVersion &AISversion, tN2kGNSStype &GNSStype,
-                        tN2kAISDTE &DTE, tN2kAISTransceiverInformation &AISinfo) {
-  return ParseN2kPGN129794(N2kMsg, MessageID, Repeat, UserID, IMOnumber, Callsign, Name, VesselType, Length,
-                          Beam, PosRefStbd, PosRefBow, ETAdate, ETAtime, Draught, Destination, AISversion,
-                          GNSStype, DTE, AISinfo);
+				    uint32_t & IMOnumber, char *Callsign, size_t CallsignBufSize, char *Name, size_t NameBufSize, uint8_t &VesselType, double &Length,
+				    double &Beam, double &PosRefStbd, double &PosRefBow, uint16_t &ETAdate, double &ETAtime,
+				    double &Draught, char *Destination, size_t DestinationBufSize, tN2kAISVersion &AISversion, tN2kGNSStype &GNSStype,
+				    tN2kAISDTE &DTE, tN2kAISTransceiverInformation &AISinfo, uint8_t &SID) {
+  return ParseN2kPGN129794(N2kMsg, MessageID, Repeat, UserID, IMOnumber, Callsign, CallsignBufSize, Name, NameBufSize, VesselType, Length,
+			   Beam, PosRefStbd, PosRefBow, ETAdate, ETAtime, Draught, Destination, DestinationBufSize,AISversion,
+			   GNSStype, DTE, AISinfo, SID);
+}
+
+/************************************************************************//**
+ * \brief Parsing the content of a "AIS static data class A"
+ *        message - PGN 129794
+ * \ingroup group_msgParsers
+ *
+ * \note Previous inline version for backwards compatibility, using temporary
+ * value to parse unused parameter
+ *
+ * Alias of PGN 129794. This alias was introduced to improve the readability
+ * of the source code. See parameter details on \ref ParseN2kPGN129794
+ */
+inline bool ParseN2kAISClassAStatic(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
+				    uint32_t & IMOnumber, char *Callsign, size_t CallsignBufSize, char *Name, size_t NameBufSize, uint8_t &VesselType, double &Length,
+				    double &Beam, double &PosRefStbd, double &PosRefBow, uint16_t &ETAdate, double &ETAtime,
+				    double &Draught, char *Destination, size_t DestinationBufSize, tN2kAISVersion &AISversion, tN2kGNSStype &GNSStype,
+				    tN2kAISDTE &DTE) {
+  tN2kAISTransceiverInformation AISinfo;
+  uint8_t SID;
+  return ParseN2kPGN129794(N2kMsg, MessageID, Repeat, UserID, IMOnumber, Callsign, CallsignBufSize, Name, NameBufSize, VesselType, Length,
+                          Beam, PosRefStbd, PosRefBow, ETAdate, ETAtime, Draught, Destination, DestinationBufSize,AISversion,
+			   GNSStype, DTE, AISinfo, SID);
 }
 
 /************************************************************************//**
  * \brief Setting up PGN 129809 Message "AIS static data class B part A"
  * \ingroup group_msgSetUp
- * 
+ *
  * This parameter group is used by Class B "CS" shipborne mobile equipment
  * each time Part A of ITU-R M.1372 Message 24 is received.
- * 
+ *
  * \sa [ITU-R M.1371](https://www.itu.int/rec/R-REC-M.1371)
  * \sa SetN2kPGN129810 and ParseN2kPGN129810
  * 
@@ -4589,13 +4717,18 @@ inline bool ParseN2kAISClassAStatic(const tN2kMsg &N2kMsg, uint8_t &MessageID, t
  *                        see \ref tN2kAISRepeat
  * \param UserID          MMSI Number
  * \param Name            Name of the vessel; 
- *                        Maximum 20 characters 6 bit ASCII;
+ *                        Maximum 20 characters;
  *                        For SAR aircraft, it should be set
  *                        to “SAR AIRCRAFT NNNNNNN” where NNNNNNN equals
  *                        the aircraft registration number
- * 
+ *                        Input string will be converted to contain only SixBit ASCII character set (see. ITU-R M.1371-1)
+ * \param AISTranseiverInformation    AIS transeiver inforation \ref tN2kAISTransceiverInformation
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID.
+ *                    The sequence identifier field is used to tie different PGNs data together to same
+ *                    sampling or calculation time.
+ *
  */
-void SetN2kPGN129809(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID, char *Name);
+void SetN2kPGN129809(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID, const char *Name, tN2kAISTransceiverInformation AISInfo=N2kaischannel_A_VDL_reception, uint8_t SID=0xff);
 
 /************************************************************************//**
  * \brief Setting up Message "AIS static data class B part A" - PGN 129809
@@ -4604,8 +4737,9 @@ void SetN2kPGN129809(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, u
  * Alias of PGN 129809. This alias was introduced to improve the readability
  * of the source code. See parameter details on \ref SetN2kPGN129809
   */
-inline void SetN2kAISClassBStaticPartA(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID, char *Name) {
-  SetN2kPGN129809(N2kMsg, MessageID, Repeat, UserID, Name);
+inline void SetN2kAISClassBStaticPartA(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID, const char *Name,
+				       tN2kAISTransceiverInformation AISInfo=N2kaischannel_A_VDL_reception, uint8_t SID=0xff) {
+  SetN2kPGN129809(N2kMsg, MessageID, Repeat, UserID, Name, AISInfo, SID);
 }
 
 /************************************************************************//**
@@ -4627,26 +4761,50 @@ inline void SetN2kAISClassBStaticPartA(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kA
  *                        see \ref tN2kAISRepeat
  * \param UserID          MMSI Number
  * \param Name            Name of the vessel; 
- *                        Maximum 20 characters 6 bit ASCII;
+ *                        Maximum 20 characters;
  *                        For SAR aircraft, it should be set
  *                        to “SAR AIRCRAFT NNNNNNN” where NNNNNNN equals
  *                        the aircraft registration number
+ *                        Input string will be converted to contain only SixBit ASCII character set (see. ITU-R M.1371-1)
+ * \param NameBufSize     size of Name buffer
+ * \param AISTranseiverInformation    AIS transeiver inforation \ref tN2kAISTransceiverInformation
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID.
+ *                    The sequence identifier field is used to tie different PGNs data together to same
+ *                    sampling or calculation time.
  * 
  * \return true     Parsing of PGN Message successful
  * \return false    Parsing of PGN Message aborted
  */
-bool ParseN2kPGN129809(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID, char *Name);
+bool ParseN2kPGN129809(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID, char *Name, size_t NameBufSizem, tN2kAISTransceiverInformation &AISInfo, uint8_t &SID);
+
+/************************************************************************//**
+ * \brief Parsing the content of a "AIS static data class B part A"
+ *        message - PGN 129809
+ * \ingroup group_msgParsers
+ *
+ * Alias of PGN 129809. This alias was introduced to improve the readability
+ * of the source code. See parameter details on \ref ParseN2kPGN129809 
+ */
+inline bool ParseN2kAISClassBStaticPartA(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID, char *Name, size_t NameBufSize,
+					 tN2kAISTransceiverInformation &AISInfo, uint8_t &SID) {
+  return ParseN2kPGN129809(N2kMsg, MessageID, Repeat, UserID, Name, NameBufSize, AISInfo, SID);
+}
 
 /************************************************************************//**
  * \brief Parsing the content of a "AIS static data class B part A" 
  *        message - PGN 129809
  * \ingroup group_msgParsers
+ *
+ * \note Previous inline version for backwards compatibility, using temporary
+ * value to parse unused parameter
  * 
  * Alias of PGN 129809. This alias was introduced to improve the readability
  * of the source code. See parameter details on \ref ParseN2kPGN129809 
  */
-inline bool ParseN2kAISClassBStaticPartA(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID, char *Name) {
-  return ParseN2kPGN129809(N2kMsg, MessageID, Repeat, UserID, Name);
+inline bool ParseN2kAISClassBStaticPartA(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID, char *Name, size_t NameBufSize) {
+  tN2kAISTransceiverInformation AISInfo;
+  uint8_t SID;
+  return ParseN2kPGN129809(N2kMsg, MessageID, Repeat, UserID, Name, NameBufSize, AISInfo, SID);
 }
 
 /************************************************************************//**
@@ -4658,7 +4816,7 @@ inline bool ParseN2kAISClassBStaticPartA(const tN2kMsg &N2kMsg, uint8_t &Message
 
  * 
  * \sa [ITU-R M.1371](https://www.itu.int/rec/R-REC-M.1371)
- * \sa SetN2kPGN129809 and ParseN2kPGN129809
+ * \sa SetN2kPGN129810 and ParseN2kPGN129810
  * 
  * \param N2kMsg        Reference to a N2kMsg Object, 
  *                      Output: NMEA2000 message ready to be send.
@@ -4675,17 +4833,22 @@ inline bool ParseN2kAISClassBStaticPartA(const tN2kMsg &N2kMsg, uint8_t &Message
  *                        Not applicable to SAR aircraft
  * \param Vendor          Unique identification of the Unit by a number as
  *                        defined by the manufacturer
- * \param Callsign        Call Sign - 7x -> 6 bit ASCII characters
+ *                        Max. 7 chars will be used. Input string will be converted to contain only SixBit ASCII character set (see. ITU-R M.1371-1)
+ * \param Callsign        Call Sign - Max. 7 chars will be used. Input string will be converted to contain only SixBit ASCII character set (see. ITU-R M.1371-1)
  * \param Length          Length/Diameter in meters
  * \param Beam            Beam/Diameter in meters
  * \param PosRefStbd      Position Reference Point from Starboard 
  * \param PosRefBow       Position Reference Point from the Bow
  * \param MothershipID    MMSI of the mothership 
+ * \param AISTranseiverInformation    AIS transeiver inforation \ref tN2kAISTransceiverInformation
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID.
+ *                    The sequence identifier field is used to tie different PGNs data together to same
+ *                    sampling or calculation time.
  * 
  */
 void SetN2kPGN129810(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
-                      uint8_t VesselType, char *Vendor, char *Callsign, double Length, double Beam,
-                      double PosRefStbd, double PosRefBow, uint32_t MothershipID);
+		     uint8_t VesselType, const char *Vendor, const char *Callsign, double Length, double Beam,
+		     double PosRefStbd, double PosRefBow, uint32_t MothershipID, tN2kAISTransceiverInformation AISInfo=N2kaischannel_B_VDL_reception, uint8_t SID=0xff);
 
 /************************************************************************//**
  * \brief Setting up Message "AIS static data class B part B" - PGN 129810
@@ -4695,10 +4858,11 @@ void SetN2kPGN129810(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, u
  * of the source code. See parameter details on \ref SetN2kPGN129810
   */
 inline void SetN2kAISClassBStaticPartB(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kAISRepeat Repeat, uint32_t UserID,
-                      uint8_t VesselType, char *Vendor, char *Callsign, double Length, double Beam,
-                      double PosRefStbd, double PosRefBow, uint32_t MothershipID) {
+				       uint8_t VesselType, const char *Vendor, const char *Callsign, double Length, double Beam,
+				       double PosRefStbd, double PosRefBow, uint32_t MothershipID,
+				       tN2kAISTransceiverInformation AISInfo=N2kaischannel_A_VDL_reception, uint8_t SID=0xff) {
   SetN2kPGN129810(N2kMsg, MessageID, Repeat, UserID, VesselType, Vendor, Callsign, Length, Beam,
-                  PosRefStbd, PosRefBow, MothershipID);
+                  PosRefStbd, PosRefBow, MothershipID, AISInfo, SID);
 }
 
 /************************************************************************//**
@@ -4728,20 +4892,26 @@ inline void SetN2kAISClassBStaticPartB(tN2kMsg &N2kMsg, uint8_t MessageID, tN2kA
  *                        Not applicable to SAR aircraft
  * \param Vendor          Unique identification of the Unit by a number as
  *                        defined by the manufacturer
- * \param Callsign        Call Sign - 7x -> 6 bit ASCII characters
+ * \param VendorBufSize   size of Vendor buffer
+ * \param Callsign        Call Sign 
+ * \param CallsignBufSize size of Callsign buffer
  * \param Length          Length/Diameter in meters
  * \param Beam            Beam/Diameter in meters
  * \param PosRefStbd      Position Reference Point from Starboard 
  * \param PosRefBow       Position Reference Point from the Bow
  * \param MothershipID    MMSI of the mothership 
+ * \param AISTranseiverInformation    AIS transeiver inforation, \ref tN2kAISTransceiverInformation
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID.
+ *                    The sequence identifier field is used to tie different PGNs data together to same
+ *                    sampling or calculation time.
  * 
  * \return true     Parsing of PGN Message successful
  * \return false    Parsing of PGN Message aborted
  * 
  */
 bool ParseN2kPGN129810(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
-                      uint8_t &VesselType, char *Vendor, char *Callsign, double &Length, double &Beam,
-                      double &PosRefStbd, double &PosRefBow, uint32_t &MothershipID);
+		       uint8_t &VesselType, char *Vendor, size_t VendorBufSize, char *Callsign, size_t CallsignBufSize,double &Length, double &Beam,
+		       double &PosRefStbd, double &PosRefBow, uint32_t &MothershipID, tN2kAISTransceiverInformation &AISInfo, uint8_t &SID);
 
 /************************************************************************//**
  * \brief Parsing the content of a "AIS static data class B part B" 
@@ -4752,10 +4922,30 @@ bool ParseN2kPGN129810(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat 
  * of the source code. See parameter details on \ref ParseN2kPGN129810 
  */
 inline bool ParseN2kAISClassBStaticPartB(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
-                      uint8_t &VesselType, char *Vendor, char *Callsign, double &Length, double &Beam,
-                      double &PosRefStbd, double &PosRefBow, uint32_t &MothershipID) {
-  return ParseN2kPGN129810(N2kMsg, MessageID, Repeat, UserID, VesselType, Vendor, Callsign,
-                                Length, Beam, PosRefStbd, PosRefBow, MothershipID);
+					 uint8_t &VesselType, char *Vendor, size_t VendorBufSize, char *Callsign, size_t CallsignBufSize, double &Length, double &Beam,
+					 double &PosRefStbd, double &PosRefBow, uint32_t &MothershipID, tN2kAISTransceiverInformation &AISInfo, uint8_t &SID ) {
+  return ParseN2kPGN129810(N2kMsg, MessageID, Repeat, UserID, VesselType, Vendor, VendorBufSize, Callsign, CallsignBufSize,
+			   Length, Beam, PosRefStbd, PosRefBow, MothershipID, AISInfo, SID);
+}
+
+/************************************************************************//**
+ * \brief Parsing the content of a "AIS static data class B part B"
+ *        message - PGN 129810
+ * \ingroup group_msgParsers
+ *
+ * \note Previous inline version for backwards compatibility, using temporary
+ * value to parse unused parameter
+ *
+ * Alias of PGN 129810. This alias was introduced to improve the readability
+ * of the source code. See parameter details on \ref ParseN2kPGN129810
+ */
+inline bool ParseN2kAISClassBStaticPartB(const tN2kMsg &N2kMsg, uint8_t &MessageID, tN2kAISRepeat &Repeat, uint32_t &UserID,
+					 uint8_t &VesselType, char *Vendor, size_t VendorBufSize, char *Callsign, size_t CallsignBufSize, double &Length, double &Beam,
+					 double &PosRefStbd, double &PosRefBow, uint32_t &MothershipID) {
+  tN2kAISTransceiverInformation AISInfo;
+  uint8_t SID;
+  return ParseN2kPGN129810(N2kMsg, MessageID, Repeat, UserID, VesselType, Vendor, VendorBufSize, Callsign, CallsignBufSize,
+			   Length, Beam, PosRefStbd, PosRefBow, MothershipID, AISInfo, SID);
 }
 
 /************************************************************************//**
@@ -4839,11 +5029,10 @@ inline bool AppendN2kWaypointList(tN2kMsg &N2kMsg, uint16_t ID, char* Name, doub
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param WindSpeed     Measured wind speed in m/s
  * \param WindAngle     Measured wind angle in radians. If you have value
  *                      in degrees, use function DegToRad() in call.
@@ -4877,11 +5066,7 @@ inline void SetN2kWindSpeed(tN2kMsg &N2kMsg, unsigned char SID, double WindSpeed
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param WindSpeed     Measured wind speed in m/s
  * \param WindAngle     Measured wind angle in radians. If you have value
  *                      in degrees, use function DegToRad() in call.
@@ -4916,11 +5101,10 @@ inline bool ParseN2kWindSpeed(const tN2kMsg &N2kMsg, unsigned char &SID, double 
  * shall be used.
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param WaterTemperature                Water temperature in K. Use 
  *                                        \ref CToKelvin, if you want to use °C.
  * \param OutsideAmbientAirTemperature    Outside ambient temperature in K.Use 
@@ -4957,11 +5141,7 @@ inline void SetN2kOutsideEnvironmentalParameters(tN2kMsg &N2kMsg, unsigned char 
  * shall be used.
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param WaterTemperature                Water temperature in K. Use 
  *                                        \ref CToKelvin, if you want to use °C.
  * \param OutsideAmbientAirTemperature    Outside ambient temperature in K.Use 
@@ -5003,11 +5183,10 @@ inline bool ParseN2kOutsideEnvironmentalParameters(const tN2kMsg &N2kMsg, unsign
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param TempSource      see tN2kTempSource
  * \param Temperature     Temperature in K. Use \ref CToKelvin, if you
  *                        want to use °C.
@@ -5048,11 +5227,7 @@ inline void SetN2kEnvironmentalParameters(tN2kMsg &N2kMsg, unsigned char SID, tN
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param TempSource      see tN2kTempSource
  * \param Temperature     Temperature in K. Use \ref CToKelvin, if you
  *                        want to use °C.
@@ -5091,11 +5266,10 @@ inline bool ParseN2kEnvironmentalParameters(const tN2kMsg &N2kMsg, unsigned char
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param TempInstance        This should be unique at least on one device. May
  *                            be best to have it unique over all devices
  *                            sending this PGN.
@@ -5134,11 +5308,7 @@ inline void SetN2kTemperature(tN2kMsg &N2kMsg, unsigned char SID, unsigned char 
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param TempInstance        This should be unique at least on one device. May
  *                            be best to have it unique over all devices
  *                            sending this PGN.
@@ -5180,11 +5350,10 @@ inline bool ParseN2kTemperature(const tN2kMsg &N2kMsg, unsigned char &SID, unsig
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param HumidityInstance  This should be unique at least on one device. May 
  *                          be best to have it unique over all devices sending
  *                          this PGN.
@@ -5213,11 +5382,7 @@ inline void SetN2kHumidity(tN2kMsg &N2kMsg, unsigned char SID, unsigned char Hum
  * Humidity as measured by a specific humidity source.
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255 
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param HumidityInstance  This should be unique at least on one device. May 
  *                          be best to have it unique over all devices sending
  *                          this PGN.
@@ -5280,11 +5445,10 @@ inline bool ParseN2kHumidity(const tN2kMsg &N2kMsg, unsigned char &SID, unsigned
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255  
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param PressureInstance  This should be unique at least on one device. May be
  *                          best to have it unique over all devices sending
  *                          this PGN.
@@ -5315,11 +5479,7 @@ inline void SetN2kPressure(tN2kMsg &N2kMsg, unsigned char SID, unsigned char Pre
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255  
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param PressureInstance  This should be unique at least on one device. May be
  *                          best to have it unique over all devices sending
  *                          this PGN.
@@ -5357,11 +5517,10 @@ inline bool ParseN2kPressure(const tN2kMsg &N2kMsg, unsigned char &SID, unsigned
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255  
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param PressureInstance  This should be unique at least on one device. May be
  *                          best to have it unique over all devices sending
  *                          this PGN.
@@ -5394,11 +5553,10 @@ inline void SetN2kSetPressure(tN2kMsg &N2kMsg, unsigned char SID, unsigned char 
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255  
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param TempInstance      This should be unique at least on one device. May be
  *                          best to have it unique over all devices sending
  *                          this PGN.
@@ -5434,11 +5592,7 @@ inline void SetN2kTemperatureExt(tN2kMsg &N2kMsg, unsigned char SID, unsigned ch
  * 
  * \param N2kMsg      Reference to a N2kMsg Object, 
  *                    Output: NMEA2000 message ready to be send.
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255  
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param TempInstance      This should be unique at least on one device. May be
  *                          best to have it unique over all devices sending
  *                          this PGN.
@@ -5669,11 +5823,10 @@ inline bool ParseN2kTrimTab(const tN2kMsg &N2kMsg, int8_t &PortTrimTab, int8_t &
  *                    Output: NMEA2000 message ready to be send.
  * \param DataMode             Data mode, see \ref tN2kDataMode
  * \param CogReference         True or Magnetic
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255  
+ * \param SID         Sequence identifier. In most cases you can use just 0xff for SID. See \ref secRefTermSID. \n
+ *                    \n
+ *                    The sequence identifier field is used to tie different PGNs data together to same 
+ *                    sampling or calculation time.
  * \param COG         Course Over Ground in radians
  * \param SOG         Speed Over Ground in m/s
  * \param Heading     Heading in radians
@@ -5709,11 +5862,7 @@ inline void SetN2kDirectionData(tN2kMsg &N2kMsg, tN2kDataMode DataMode, tN2kHead
  *                    Output: NMEA2000 message ready to be send.
  * \param DataMode             Data mode, see \ref tN2kDataMode
  * \param CogReference         True or Magnetic
- * \param SID         Sequence ID. If your device is e.g. boat speed and
- *                    heading at same time, you can set same SID for
- *                    different messages to link this PGN to other related
- *                    PGNs. When no linkage exists, the value of the SID shall
- *                    be set to 255  
+ * \param SID         Sequence ID. Normally you can just forget its value. See \ref secRefTermSID.
  * \param COG         Course Over Ground in radians
  * \param SOG         Speed Over Ground in m/s
  * \param Heading     Heading in radians

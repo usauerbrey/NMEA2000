@@ -4,7 +4,7 @@
 /*
  * N2kTimer.h
  * 
- * Copyright (c) 2022-2023 Timo Lappalainen, Kave Oy, www.kave.fi
+ * Copyright (c) 2022-2024 Timo Lappalainen, Kave Oy, www.kave.fi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,7 +29,7 @@
  * \brief The file contains function and classes for best timing performance
  * 
  * Module is designed to hide millis() function from library and provide 
- * best performace way for timings.
+ * best performance way for timings.
  * 
  * N2kMillis64() is 64 bit millisecond timer, which practically never
  * roll over.
@@ -93,7 +93,7 @@
  * \return true    when T1<T2
  * \return false 
  */
-inline bool N2kIsTimeBefore(uint32_t T1, uint32_t T2) { return (T2-T1)<LONG_MAX; }
+inline bool N2kIsTimeBefore(uint32_t T1, uint32_t T2) { return (T2-T1)<INT32_MAX; }
 
 /************************************************************************//**
  * \brief Has time elapsed since start
@@ -109,7 +109,7 @@ inline bool N2kIsTimeBefore(uint32_t T1, uint32_t T2) { return (T2-T1)<LONG_MAX;
  * \return false 
  */
 inline bool N2kHasElapsed(uint32_t Start, uint32_t Elapsed, uint32_t Now=N2kMillis()) { 
-  return Now-(Start+Elapsed)<LONG_MAX; 
+  return Now-(Start+Elapsed)<INT32_MAX; 
 }
 
 /************************************************************************//**
@@ -139,7 +139,7 @@ public:
    * This function initializes all parameters.
    *
    * \param Enable      default = false
-   * \param _Period     Periode [ms] of the scheduler, default = 0
+   * \param _Period     Period [ms] of the scheduler, default = 0
    * \param _Offset     Offset [ms] of the scheduler, default = 0
    */
   tN2kSyncScheduler(bool Enable=false, uint32_t _Period=0, uint32_t _Offset=0) { 
@@ -333,12 +333,12 @@ public:
     #if defined(N2kUse64bitSchedulerTime)
     return N2kMillis64()>NextTime;
     #else
-    return !IsDisabled() && ( N2kMillis()-NextTime<LONG_MAX );
+    return !IsDisabled() && ( N2kMillis()-NextTime<INT32_MAX );
     #endif
   }
 
   /************************************************************************//**
-   * \brief Set Timestamp for next event relativ to now
+   * \brief Set Timestamp for next event relative to now
    *
    * \param _Add Time delay from now for next event
    */

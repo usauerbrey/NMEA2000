@@ -1,7 +1,7 @@
 /*
 N2kMsg.cpp
 
-Copyright (c) 2015-2023 Timo Lappalainen, Kave Oy, www.kave.fi
+Copyright (c) 2015-2024 Timo Lappalainen, Kave Oy, www.kave.fi
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -26,6 +26,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 //#include <MemoryFree.h>  // For testing used memory
 
 #define Escape 0x10
@@ -143,6 +144,15 @@ void tN2kMsg::Add3ByteDouble(double v, double precision, double UndefVal) {
 }
 
 //*****************************************************************************
+void tN2kMsg::Add3ByteUDouble(double v, double precision, double UndefVal) {
+  if (v!=UndefVal) {
+    SetBuf3ByteUDouble(v,precision,DataLen,Data);
+  } else {
+    SetBuf3ByteUInt(0xffffff,DataLen,Data);
+  }
+}
+
+//*****************************************************************************
 void tN2kMsg::Add2ByteDouble(double v, double precision, double UndefVal) {
   if (v!=UndefVal) {
     SetBuf2ByteDouble(v,precision,DataLen,Data);
@@ -209,15 +219,26 @@ void tN2kMsg::AddByte(unsigned char v) {
 }
 
 //*****************************************************************************
-void tN2kMsg::AddStr(const char *str, int len, bool UsePgm) {
-  SetBufStr(str,len,DataLen,Data,UsePgm,0x20);
-//  SetBufStr(str,len,DataLen,Data,UsePgm,0xff);
+void tN2kMsg::AddStr(const char *str, int len, bool UsePgm, unsigned char fillChar) {
+  SetBufStr(str,len,DataLen,Data,UsePgm,fillChar);
 }
 
 //*****************************************************************************
-void tN2kMsg::AddStr0(const char *str, int len, bool UsePgm) {
-  SetBufStr(str,len,DataLen,Data,UsePgm,0x00);
+// Add AIS String
+// make sure characters fall into range defined in table 14
+// https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1371-1-200108-S!!PDF-E.pdf
+void tN2kMsg::AddAISStr(const char *str, int len) {
+  unsigned char *buf=Data+DataLen;
+  for (; len>0 && *str!=0 && DataLen<MaxDataLen; len--, DataLen++, buf++, str++) {
+    char c = toupper((int)*str);
+    *buf=(c >= 0x20 && c <= 0x5F) ? c : '?';
+  }
+
+  if ( len > MaxDataLen-DataLen ) len=MaxDataLen-DataLen;
+  DataLen+=len;
+  if ( len>0 ) memset(buf,'@',len);
 }
+
 
 //*****************************************************************************
 void tN2kMsg::AddVarStr(const char *str, bool UsePgm) {
@@ -317,6 +338,13 @@ double tN2kMsg::Get3ByteDouble(double precision, int &Index, double def) const {
 }
 
 //*****************************************************************************
+double tN2kMsg::Get3ByteUDouble(double precision, int &Index, double def) const {
+  if (Index+3<=DataLen) {
+    return GetBuf3ByteUDouble(precision,Index,Data,def);
+  } else return def;
+}
+
+//*****************************************************************************
 double tN2kMsg::Get4ByteDouble(double precision, int &Index, double def) const {
   if (Index+4<=DataLen) {
     return GetBuf4ByteDouble(precision,Index,Data,def);
@@ -403,8 +431,10 @@ bool tN2kMsg::GetStr(size_t StrBufSize, char *StrBuf, size_t Length, unsigned ch
 
 //*****************************************************************************
 bool tN2kMsg::GetVarStr(size_t &StrBufSize, char *StrBuf, int &Index) const {
-  size_t Len=GetByte(Index)-2;
+  size_t Len=GetByte(Index);
   uint8_t Type=GetByte(Index);
+  if ( Len<2) { StrBufSize=0; return false; } // invalid length
+  Len-=2;
   if ( Type!=0x01 ) { StrBufSize=0; return false; }
   if ( StrBuf!=0 ) {
     GetStr(StrBufSize,StrBuf,Len,0xff,Index);
@@ -562,11 +592,12 @@ void SetBufFloat(float v, int &index, unsigned char *buf) {
 #define N2kUInt8OR 0xfe
 #define N2kInt16OR 0x7ffe
 #define N2kUInt16OR 0xfffe
+#define N2kInt24OR 0x7ffffe
+#define N2kUInt24OR 0xfffffe
 #define N2kInt32OR 0x7ffffffe
 #define N2kUInt32OR 0xfffffffe
 
 #define N2kInt32Min -2147483648L
-#define N2kInt24OR  8388606L
 #define N2kInt24Min -8388608L
 #define N2kInt16Min -32768
 #define N2kInt8Min  -128
@@ -607,6 +638,13 @@ void SetBuf4ByteUDouble(double v, double precision, int &index, unsigned char *b
 void SetBuf3ByteDouble(double v, double precision, int &index, unsigned char *buf) {
   double vd=round((v/precision));
   int32_t vi = (vd>=N2kInt24Min && vd<N2kInt24OR)?(int32_t)vd:N2kInt24OR;
+  SetBuf<int32_t>(vi, 3, index, buf);
+}
+
+//*****************************************************************************
+void SetBuf3ByteUDouble(double v, double precision, int &index, unsigned char *buf) {
+  double vd=round((v/precision));
+  int32_t vi = (vd>=0 && vd<N2kUInt24OR)?(int32_t)vd:N2kUInt24OR;
   SetBuf<int32_t>(vi, 3, index, buf);
 }
 
@@ -711,6 +749,14 @@ double GetBuf3ByteDouble(double precision, int &index, const unsigned char *buf,
 }
 
 //*****************************************************************************
+double GetBuf3ByteUDouble(double precision, int &index, const unsigned char *buf, double def) {
+  int32_t vl = GetBuf<int32_t>(3, index, buf);
+  if (vl==0x00ffffff) return def;
+
+  return vl * precision;
+}
+
+//*****************************************************************************
 double GetBuf4ByteDouble(double precision, int &index, const unsigned char *buf, double def) {
   int32_t vl = GetBuf<int32_t>(4, index, buf);
   if (vl==0x7fffffff) return def;
@@ -768,6 +814,12 @@ void SetBuf2ByteUInt(uint16_t v, int &index, unsigned char *buf) {
 void SetBuf3ByteInt(int32_t v, int &index, unsigned char *buf) {
   SetBuf(v, 3, index, buf);
 }
+
+//*****************************************************************************
+void SetBuf3ByteUInt(int32_t v, int &index, unsigned char *buf) {
+  SetBuf(v, 3, index, buf);
+}
+
 
 //*****************************************************************************
 void SetBuf4ByteUInt(uint32_t v, int &index, unsigned char *buf) {

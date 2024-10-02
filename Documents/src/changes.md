@@ -1,5 +1,126 @@
 # Changes to the Library {#changes}
 \tableofcontents
+
+## 24.09.2024
+- Fixed UpdateHasPendingInformation() to use or (||) on test.
+- Fix no NAK for broadcast ISO Request
+- Fix do not call ISORqstHandler for specific messages, if request is broadcast
+- Added HandleCommand group function handler for heartbeat (PGN 126993)
+- Fixed 130316 temperature to unsigned by EricvanderVelde
+
+## 23.05.2024
+- Fixed GetVarStr to handle invalid length, thanks to EricvanderVelde.
+- Fixed PGN 129794 setter to set SID properly.
+- Fixed PGN 129540 to parse up to MaxSatelliteInfoCount, thanks to cosina.
+- CMakeLists.txt update by Dirlay.
+
+## 25.03.2024
+- Added PGN 127510
+- Added PGN 127750
+- Modidified AIS PGN PGN 129038, 129039, 129794, 129809, and 129810 to include AIS Transceiver Info and SID (where applicable)
+
+## 25.03.2024
+
+- Fix for ParseN2kPGN129810 parameter list.
+- Fixed SetN2kPGN129810 - AIS spare must be 0
+- Forced transceiver information on SetN2kPGN129810 to "channel B VDL transmission"
+- Fixed SetAISStr on N2kMsg.cpp
+
+## 06.03.2024
+
+-- reduced memory footprint for N2kMsg::AddAISStr
+-- bumped library version
+-- Ensure that strings added by N2kMsg::AddAISStr are 6 bit ASCII ITU-R M.1371-1 table 14 compliant
+
+## 26.02.2024
+
+- changed (char *) arguments to (const char *) in Set functions for PGN 129809, 129810, 129794
+- Added AddAISStr() method to N2kMsg class which filters AIS strings to make complient with ITU-R M.1371-1
+- modified Set functions for PGN 129809, 129810, 129794 to use AddAISStr()
+
+## 23.02.2024
+
+- Compatibility change: Parsers ParseN2kPGN129809, ParseN2kPGN129810 and ParseN2kPGN129794 parameter list 
+	Added buffer length fields for Name, Callsign, and Destination
+- Fixed PGN 129809, 129810, 129794 string handling. AIS strings uses @ for padding.
+
+## 09.02.2024
+
+- Fix multiple spelling errors in comments. Thanks to garaminowicz.
+
+## 06.02.2024
+
+- Fix tPriorityRingBuffer. It did not freed values properly. tPriorityRingBuffer is used on tNMEA2000_Teensyx driver.
+- Ring buffer documentation update.
+- Fixed SetN2kPGN129284 and ParseN2kPGN129284. Changed OriginWaypointNumber and DestinationWaypointNumber parameter to uint32_t. This causes compatibility issue for users used ParseN2kPGN129284 and they have to update reference parameter type. Also if SetN2kPGN129284 was used with related parameters value N2kUint8NA, they must be updated to use N2kUint32NA
+- Moved OnOpen call on Open after setting Heartbeat interval and offset. If Heartbeat settings were set on OnOpen, settings were reset.
+- Added note to documentation for OnOpen about coming change.
+- Added lightning PGNs to fastpacket list.
+
+## 02.02.2024
+
+- Document update. Updates on document sources and code sources.
+
+## 22.01.2024
+
+- Fixed compiler error in case #define N2K_NO_HEARTBEAT_SUPPORT 1 has been used.
+- Fixed priority setting test on tN2kGroupFunctionHandler::HandleCommand and tN2kGroupFunctionHandlerForPGN126998::HandleCommand
+- Fixed Mode setting on SetN2kPGN129540
+
+## 21.01.2024
+
+- Document update. Updates on document sources and code sources.
+
+## 13.01.2024
+
+- Fixed PGN129539 reader and parser.
+- Added #include "N2kTypes.h" to N2kMaretron.h
+- Fixed PGN130316 default period information
+- Added missing methods to tRingBuffer template
+- Updated copyright
+
+## 08.12.2023
+
+- Added entertainment fastpacket PGNs to fastpacket list.
+- Added electric fastpcket PGNs 127490, 127491, 127494, 127495 to fastpacket list.
+- Added elevator fastpacket PGN 128538 to fastpacket list.
+- Moved FindSourceDeviceIndex to public
+- Added IsOpen
+- Added GetForwardStream
+- Document update by trixpan
+- Added fluid type enum to N2kMessagesEnumToStr.h
+- Added support for NMEA2000_ArduinoCAN to NMEA2000_CAN.h by jboynes
+
+## 04.10.2023
+
+- Fix use N2kMillis instead of millis on N2kDeviceList by nicklasb.
+
+## 12.09.2023
+
+- Fixed priority setting on N2kGroupFunction tN2kGroupFunctionHandler::ParseCommandParams
+- Fixed inline void SetN2kPGN129285 on N2kMessages.h to avoid conflict
+- Fixed readNHexByte on SeaSmart.cpp to avoid warning.
+- Restored dropped GetManufacturerInformation() definition to tNMEA2000::tDevice
+- Fix comment for 127233L on NMEA2000.cpp
+
+## 25.07.2023
+
+- Changed INT32_MAX instead of LONG_MAX on N2kTimer.h by Sam Meredith
+- CMakeLists update by phatpaul
+- Cleaner CMakeLists.txt by Paul Abbott
+- Example ActisenseListener update
+
+## 20.05.2023
+
+- Example N2kDataToNMEA0183 update by Andrei Errapart
+
+## 19.05.2023
+
+- Catch update to version 2.13.10 by Andrei Errapart
+- Fix N2kMessages/ ParsePGN129029 initialize reference station variables t NA, if no reference station by Andrei Errapart
+- CMakeLists compatible as ESP-IDF by Paul Abbott
+- N2kCANMsg.h: Changed #include <N2kMSG.h> to use quotes.
+
 ## 08.02.2023
 
 - Fixed priority setting on SetN2kPGN130577.

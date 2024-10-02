@@ -1,7 +1,7 @@
 /*
   The MIT License
 
-  Copyright (c) 2017-2023 Thomas Sarlandie thomas@sarlandie.net
+  Copyright (c) 2017-2024 Thomas Sarlandie thomas@sarlandie.net
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
@@ -95,17 +95,18 @@ size_t N2kToSeasmart(const tN2kMsg &msg, uint32_t timestamp, char *buffer, size_
 }
 
 /*
- * Attemts to read n bytes in hexadecimal from input string to value.
+ * Attempts to read n bytes in hexadecimal from input string to value.
  *
  * Returns true if successful, false otherwise.
  */
 static bool readNHexByte(const char *s, unsigned int n, uint32_t &value) {
+  value=(uint32_t)(-1); // required to avoid warning about uninitialized variable.
   if (strlen(s) < 2*n) {
-    return -1;
+    return false;
   }
   for (unsigned int i = 0; i < 2*n; i++) {
     if (!isxdigit(s[i])) {
-      return -1;
+      return false;
     }
   }
 

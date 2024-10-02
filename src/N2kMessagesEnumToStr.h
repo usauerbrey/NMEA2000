@@ -1,7 +1,7 @@
 /*
  * N2kMessagesEnumToStr.h
 
- * Copyright (c) 2015-2023 Timo Lappalainen, Kave Oy, www.kave.fi
+ * Copyright (c) 2015-2024 Timo Lappalainen, Kave Oy, www.kave.fi
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -59,7 +59,7 @@ const char *N2kEnumTypeEmpty="";
  * 
  * This function template generation an text output to the defined stream. 
  * Corresponding to the type of the enum value, the correct function (and
- * therefor output text) is chosen.
+ * therefore output text) is chosen.
  * 
  * @tparam T            Type of the enum
  * @param a             enum value
@@ -143,6 +143,17 @@ const char* tN2kGNSSmethodStrs[] = { "no GNSS", "GNSS fix", "DGNSS", "precise GN
  * \brief Converting the N2k enum \ref tN2kGNSSmethod to a const char
  */
 MakeN2kEnumTypeToStrFunc(tN2kGNSSmethod,tN2kGNSSmethodStrs);
+
+/************************************************************************//**
+ * \brief string representation of the N2k enum tN2kFluidType
+ */
+const char* tN2kFluidTypeStrs[] = { "Fuel", "Water", "Gray water", "Live well", "Oil", "Black water", "Gasoline Fuel", 
+                                    "Reserved", "Reserved",  "Reserved",  "Reserved",  "Reserved",  "Reserved",  "Reserved",
+                                    "Error", "Unavailable",};
+/************************************************************************//**
+ * \brief Converting the N2k enum \ref tN2kFluidType to a const char
+ */
+MakeN2kEnumTypeToStrFunc(tN2kFluidType,tN2kFluidTypeStrs);
 
 /************************************************************************//**
  * \brief string representation of the N2k enum tN2kTempSource
