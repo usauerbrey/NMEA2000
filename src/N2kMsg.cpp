@@ -224,6 +224,16 @@ void tN2kMsg::AddStr(const char *str, int len, bool UsePgm, unsigned char fillCh
 }
 
 //*****************************************************************************
+void tN2kMsg::AddStrBlank(const char* str, int len, bool UsePgm) {
+    SetBufStr(str, len, DataLen, Data, UsePgm, 0x20);
+}
+
+//*****************************************************************************
+void tN2kMsg::AddStr0(const char* str, int len, bool UsePgm) {
+    SetBufStr(str, len, DataLen, Data, UsePgm, 0x00);
+}
+
+//*****************************************************************************
 // Add AIS String
 // make sure characters fall into range defined in table 14
 // https://www.itu.int/dms_pubrec/itu-r/rec/m/R-REC-M.1371-1-200108-S!!PDF-E.pdf
