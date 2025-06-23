@@ -246,7 +246,11 @@ void tN2kMsg::AddAISStr(const char *str, int len) {
 
   if ( len > MaxDataLen-DataLen ) len=MaxDataLen-DataLen;
   DataLen+=len;
-  if ( len>0 ) memset(buf,'@',len);
+  // Trailing bytes have been observed as '@', ' ', 0x0 or 0xff.
+//  if ( len>0 ) memset(buf,'@',len);
+//  if ( len>0 ) memset(buf,' ',len);
+  if ( len>0 ) memset(buf,0x0,len);
+//  if ( len>0 ) memset(buf,0xff,len);
 }
 
 
